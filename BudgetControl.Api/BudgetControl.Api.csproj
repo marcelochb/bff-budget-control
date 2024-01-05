@@ -8,14 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\BudgetControl.Contracts\BudgetControl.Contracts.csproj" />
     <ProjectReference Include="..\BudgetControl.Application\BudgetControl.Application.csproj" />
     <ProjectReference Include="..\BudgetControl.Interfaces\BudgetControl.Interfaces.csproj" />
+    <ProjectReference Include="..\BudgetControl.Infrastructure\BudgetControl.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
