@@ -1,20 +1,45 @@
 using BudgetControl.Contracts.Authentication.Request;
+using BudgetControl.Contracts.Authentication.Response;
+using BudgetControl.Interfaces.Services.Authentication;
+using ErrorOr;
+using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BudgetControl.Api.Controllers;
-[ApiController]
 [Route("auth")]
-public class AuthenticationController : ControllerBase
+public class AuthenticationController : ApiController
 {
-    [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] RegisterRequest request)
+    private readonly IAuthenticationService<AuthenticationResult> _authenticationService;
+    private readonly IMapper _mapper;
+
+    public AuthenticationController(IAuthenticationService<AuthenticationResult> authenticationService, IMapper mapper)
     {
-        return Ok(request);
+        _authenticationService = authenticationService;
+        _mapper = mapper;
+    }
+
+    [HttpPost("register")]
+    public IActionResult Register(RegisterRequest request)
+    {
+        ErrorOr<AuthenticationResult> authResult = _authenticationService.Register(
+            request.Name,
+            request.Email,
+            request.Password,
+            request.ConfirmPassword);
+
+        return authResult.Match(
+          authResult => Ok(_mapper.Map<AuthenticationResponse>(authResult)),
+          errors => Problem(errors)
+        );
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginRequest request)
+    public IActionResult Login(LoginRequest request)
     {
-        return Ok(request);
+        ErrorOr<AuthenticationResult> authResult = _authenticationService.Login(request.Email, request.Password);
+        return authResult.Match(
+        authResult => Ok(_mapper.Map<AuthenticationResponse>(authResult)),
+        errors => Problem(errors)
+        );
     }
 }
