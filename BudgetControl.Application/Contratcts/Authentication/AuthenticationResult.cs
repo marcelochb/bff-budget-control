@@ -1,4 +1,4 @@
 
-using BudgetControl.Application.Contratcts.Authentication;
+using BudgetControl.Domain.Entities;
 
-public record AuthenticationResult(UserResult User, ConfigResult Config, string Token);
+public record AuthenticationResult(User User, Config Config, string Token);

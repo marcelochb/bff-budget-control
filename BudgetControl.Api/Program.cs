@@ -1,11 +1,13 @@
 using BudgetControl.Api;
 using BudgetControl.Application;
+using BudgetControl.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 {
     builder.Services
     .AddPresentation()
-    .AddApplication();
+    .AddApplication()
+    .AddInfrastructure(builder.Configuration);
 }
 
 
