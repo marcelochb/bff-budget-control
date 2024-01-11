@@ -1,3 +1,3 @@
 namespace BudgetControl.Contracts.Authentication.Response;
 
-public record UserResponse(string Name, string Email, string Status);
+public record UserResponse(string Name, string Email, string Status, ConfigResponse Config);

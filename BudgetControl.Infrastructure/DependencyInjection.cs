@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using BudgetControl.Interfaces.Persistence.Authentication;
 using BudgetControl.Domain.Entities;
+using BudgetControl.Interfaces.Persistence.Ledger;
 
 namespace BudgetControl.Infrastructure;
 
@@ -19,6 +20,7 @@ public static class DependencyInjection
         services.AddSingleton<IJwtTokenGenerator<User>, JwtTokenGenerator>();
         services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
         services.AddScoped<IUserRepository<User>, UserRepository>();
+        services.AddScoped<ILedgerRepository<Ledger>, LedgerRepository>();
         return services;
     }
 }

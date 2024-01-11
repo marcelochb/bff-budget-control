@@ -21,39 +21,27 @@ public class AuthenticationService : IAuthenticationService<AuthenticationResult
     }
     public ErrorOr<AuthenticationResult> Login(string email, string password)
     {
-        // 1 - Validate the user exists
         if (_userRepository.GetUserByEmail(email) is not User user)
         {
             return Errors.Authentication.InvalidCredential;
         }
 
-        // 2 - Validate the password is correct
         if (user.Password != password)
         {
             return new[] { Errors.Authentication.InvalidCredential };
         }
         
-        // 3 - Generate JWT token
         var token = _jwtTokenGenerator.GeneratorToken(user);
-        return new AuthenticationResult(user,new Config(),token);
+        return new AuthenticationResult(user,token);
     }
 
     public ErrorOr<AuthenticationResult> Register(string name, string email, string password, string confirmPassword)
     {
-        // 1 - Validate the user doesn't exist
         if (_userRepository.GetUserByEmail(email) is not null)
         {
             return Errors.User.DuplicateEmail;
         }
-        // 2 - Create user (generate unique Id) & persiste to DB
-        var user = new User{
-            Name = name,
-            Email = email,
-            Password = password,
-            Status = "Guest"
-        };
-        _userRepository.Add(user);
-        _ledgerRepository.Add(new Ledger{
+        var ledger = new Ledger{
             Id = Guid.NewGuid(),
             Name = "Default",
             Share = false,
@@ -115,9 +103,20 @@ public class AuthenticationService : IAuthenticationService<AuthenticationResult
                     ]
                 },
             ]
-    });
-        // 3 - Generate JWT token
+        };
+        _ledgerRepository.Add(ledger);        
+        var user = new User{
+            Name = name,
+            Email = email,
+            Password = password,
+            Status = "Guest"
+        };
+     
+        var config = new Config{LedgerId = ledger.Id};
+        user.Config = config;
+        _userRepository.Add(user);
+
         var token = _jwtTokenGenerator.GeneratorToken(user);
-      return new AuthenticationResult(user, new Config(),token);
+        return new AuthenticationResult(user,token);
     }
 }

@@ -2,5 +2,5 @@ namespace BudgetControl.Domain.Entities;
 
 public class Config
 {
-    public string Ledger_Id { get; set; } = null!;
+    public Guid LedgerId { get; set; } = Guid.Empty;
 }
