@@ -1,5 +1,6 @@
-using BudgetControl.Application.Services.Authentication;
-using BudgetControl.Interfaces.Services.Authentication;
+using BudgetControl.Application.Contratcts;
+using BudgetControl.Application.Services;
+using BudgetControl.Interfaces.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BudgetControl.Application;

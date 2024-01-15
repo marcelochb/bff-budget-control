@@ -1,6 +1,7 @@
+using BudgetControl.Application.Contratcts;
 using BudgetControl.Contracts.Authentication.Request;
 using BudgetControl.Contracts.Authentication.Response;
-using BudgetControl.Interfaces.Services.Authentication;
+using BudgetControl.Interfaces.Services;
 using ErrorOr;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;

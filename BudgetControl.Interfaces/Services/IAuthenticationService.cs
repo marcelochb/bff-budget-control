@@ -1,6 +1,6 @@
 using ErrorOr;
 
-namespace BudgetControl.Interfaces.Services.Authentication;
+namespace BudgetControl.Interfaces.Services;
 
 public interface IAuthenticationService<T>
 {

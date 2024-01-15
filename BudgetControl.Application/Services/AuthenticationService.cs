@@ -1,11 +1,12 @@
+using BudgetControl.Application.Contratcts;
 using BudgetControl.Domain.Common.Errors;
 using BudgetControl.Domain.Entities;
 using BudgetControl.Interfaces.Persistence.Authentication;
 using BudgetControl.Interfaces.Persistence.Ledger;
-using BudgetControl.Interfaces.Services.Authentication;
+using BudgetControl.Interfaces.Services;
 using ErrorOr;
 
-namespace BudgetControl.Application.Services.Authentication;
+namespace BudgetControl.Application.Services;
 
 public class AuthenticationService : IAuthenticationService<AuthenticationResult>
 {
@@ -30,9 +31,9 @@ public class AuthenticationService : IAuthenticationService<AuthenticationResult
         {
             return new[] { Errors.Authentication.InvalidCredential };
         }
-        
+
         var token = _jwtTokenGenerator.GeneratorToken(user);
-        return new AuthenticationResult(user,token);
+        return new AuthenticationResult(user, token);
     }
 
     public ErrorOr<AuthenticationResult> Register(string name, string email, string password, string confirmPassword)
@@ -41,7 +42,8 @@ public class AuthenticationService : IAuthenticationService<AuthenticationResult
         {
             return Errors.User.DuplicateEmail;
         }
-        var ledger = new Ledger{
+        var ledger = new Ledger
+        {
             Id = Guid.NewGuid(),
             Name = "Default",
             Share = false,
@@ -104,19 +106,20 @@ public class AuthenticationService : IAuthenticationService<AuthenticationResult
                 },
             ]
         };
-        _ledgerRepository.Add(ledger);        
-        var user = new User{
+        _ledgerRepository.Add(ledger);
+        var user = new User
+        {
             Name = name,
             Email = email,
             Password = password,
             Status = "Guest"
         };
-     
-        var config = new Config{LedgerId = ledger.Id};
+
+        var config = new Config { LedgerId = ledger.Id };
         user.Config = config;
         _userRepository.Add(user);
 
         var token = _jwtTokenGenerator.GeneratorToken(user);
-        return new AuthenticationResult(user,token);
+        return new AuthenticationResult(user, token);
     }
 }
