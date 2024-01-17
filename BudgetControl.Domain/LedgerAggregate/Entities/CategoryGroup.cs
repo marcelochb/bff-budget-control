@@ -1,14 +1,14 @@
 using BudgetControl.Domain.Common.Models;
-using BudgetControl.Domain.Ledger.ValueObjects;
+using BudgetControl.Domain.LedgerAggregate.ValueObjects;
 
-namespace BudgetControl.Domain.Ledger.Entities;
+namespace BudgetControl.Domain.LedgerAggregate.Entities;
 
 public sealed class CategoryGroup : Entity<CategoryGroupId>
 {
     public string Name { get; }
     public float Goal { get; }
 
-    private CategoryGroup(CategoryGroupId categoryGroupId,string name, float goal) : base(categoryGroupId)  
+    private CategoryGroup(CategoryGroupId categoryGroupId, string name, float goal) : base(categoryGroupId)
     {
         Name = name;
         Goal = goal;
@@ -16,6 +16,6 @@ public sealed class CategoryGroup : Entity<CategoryGroupId>
 
     public static CategoryGroup Create(string name, float goal)
     {
-        return new(CategoryGroupId.CreateUnique(),name, goal);
+        return new(CategoryGroupId.CreateUnique(), name, goal);
     }
 }

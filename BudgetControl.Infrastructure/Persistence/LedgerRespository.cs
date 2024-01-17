@@ -1,5 +1,5 @@
-using BudgetControl.Domain.Entities;
-using BudgetControl.Interfaces.Persistence.Ledger;
+using BudgetControl.Domain.LedgerAggregate;
+using BudgetControl.Interfaces.Persistence.Ledgers;
 
 namespace BudgetControl.Infrastructure.Persistence;
 

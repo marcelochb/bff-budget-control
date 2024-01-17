@@ -1,4 +1,5 @@
-using BudgetControl.Domain.Entities;
+
+using BudgetControl.Domain.LedgerAggregate;
 
 namespace BudgetControl.Application.Contratcts;
 

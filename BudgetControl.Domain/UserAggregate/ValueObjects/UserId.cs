@@ -1,6 +1,6 @@
 using BudgetControl.Domain.Common.Models;
 
-namespace BudgetControl.Domain.User.ValueObjects;
+namespace BudgetControl.Domain.UserAggregate.ValueObjects;
 
 public sealed class UserId : ValueObject
 {

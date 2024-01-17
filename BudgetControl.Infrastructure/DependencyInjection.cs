@@ -4,8 +4,9 @@ using BudgetControl.Infrastructure.Authentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using BudgetControl.Interfaces.Persistence.Authentication;
-using BudgetControl.Domain.Entities;
-using BudgetControl.Interfaces.Persistence.Ledger;
+using BudgetControl.Interfaces.Persistence.Ledgers;
+using BudgetControl.Domain.UserAggregate;
+using BudgetControl.Domain.LedgerAggregate;
 
 namespace BudgetControl.Infrastructure;
 

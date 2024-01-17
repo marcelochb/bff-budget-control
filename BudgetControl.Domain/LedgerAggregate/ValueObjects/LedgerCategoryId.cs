@@ -1,17 +1,17 @@
 using BudgetControl.Domain.Common.Models;
 
-namespace BudgetControl.Domain.Ledger.ValueObjects;
+namespace BudgetControl.Domain.LedgerAggregate.ValueObjects;
 
-public sealed class LedgerId : ValueObject
+public sealed class LedgerCategoryId : ValueObject
 {
     public Guid Value { get; }
 
-    private LedgerId(Guid value)
+    private LedgerCategoryId(Guid value)
     {
         Value = value;
     }
 
-    public static LedgerId CreateUnique()
+    public static LedgerCategoryId CreateUnique()
     {
         return new(Guid.NewGuid());
     }

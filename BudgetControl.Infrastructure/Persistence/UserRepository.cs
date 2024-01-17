@@ -1,5 +1,4 @@
-
-using BudgetControl.Domain.Entities;
+using BudgetControl.Domain.UserAggregate;
 using BudgetControl.Interfaces.Persistence.Authentication;
 
 namespace BudgetControl.Infrastructure.Persistence;

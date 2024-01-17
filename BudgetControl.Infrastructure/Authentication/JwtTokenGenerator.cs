@@ -1,7 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using BudgetControl.Domain.Entities;
+using BudgetControl.Domain.UserAggregate;
 using BudgetControl.Interfaces.Persistence.Authentication;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;

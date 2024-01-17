@@ -1,5 +1,4 @@
 using BudgetControl.Contracts.Authentication.Response;
-using BudgetControl.Domain.Entities;
 using Mapster;
 
 namespace BudgetControl.Api.Common.Mapping;

@@ -1,8 +1,8 @@
 using BudgetControl.Domain.Common.Models;
-using BudgetControl.Domain.Ledger.Entities;
-using BudgetControl.Domain.Ledger.ValueObjects;
+using BudgetControl.Domain.LedgerAggregate.Entities;
+using BudgetControl.Domain.LedgerAggregate.ValueObjects;
 
-namespace BudgetControl.Domain.Ledger;
+namespace BudgetControl.Domain.LedgerAggregate;
 
 public sealed class Ledger : AggregateRoot<LedgerId>
 {
@@ -13,19 +13,21 @@ public sealed class Ledger : AggregateRoot<LedgerId>
 
     public IReadOnlyList<LedgerCategory> Categories => _categories.AsReadOnly();
 
-    private Ledger(LedgerId ledgerId, string name, string type, string userName) : base(ledgerId)
+    private Ledger(LedgerId ledgerId, string name, string type, string userName, List<LedgerCategory> categories) : base(ledgerId)
     {
         Name = name;
         Type = type;
         UserName = userName;
+        _categories = categories;
     }
 
-    public static Ledger Create(string name, string type, string userName)
+    public static Ledger Create(string name, string type, string userName, List<LedgerCategory> categories)
     {
         return new(
             LedgerId.CreateUnique(),
             name,
             type,
-            userName);
+            userName,
+            categories);
     }
 }

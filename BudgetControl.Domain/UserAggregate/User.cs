@@ -1,9 +1,8 @@
 using BudgetControl.Domain.Common.Models;
-using BudgetControl.Domain.Ledger.ValueObjects;
-using BudgetControl.Domain.User.Entities;
-using BudgetControl.Domain.User.ValueObjects;
+using BudgetControl.Domain.UserAggregate.Entities;
+using BudgetControl.Domain.UserAggregate.ValueObjects;
 
-namespace BudgetControl.Domain.User;
+namespace BudgetControl.Domain.UserAggregate;
 
 public sealed class User : AggregateRoot<UserId>
 {
@@ -12,7 +11,7 @@ public sealed class User : AggregateRoot<UserId>
     public string Password { get; }
     public string Status { get; }
 
-    public UserConfig Config {get; }
+    public UserConfig Config { get; }
 
     private User(
         UserId userId,

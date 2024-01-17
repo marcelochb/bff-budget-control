@@ -1,8 +1,11 @@
 using BudgetControl.Application.Contratcts;
 using BudgetControl.Domain.Common.Errors;
-using BudgetControl.Domain.Entities;
+using BudgetControl.Domain.LedgerAggregate;
+using BudgetControl.Domain.LedgerAggregate.Entities;
+using BudgetControl.Domain.UserAggregate;
+using BudgetControl.Domain.UserAggregate.Entities;
 using BudgetControl.Interfaces.Persistence.Authentication;
-using BudgetControl.Interfaces.Persistence.Ledger;
+using BudgetControl.Interfaces.Persistence.Ledgers;
 using BudgetControl.Interfaces.Services;
 using ErrorOr;
 
@@ -42,81 +45,65 @@ public class AuthenticationService : IAuthenticationService<AuthenticationResult
         {
             return Errors.User.DuplicateEmail;
         }
-        var ledger = new Ledger
-        {
-            Id = Guid.NewGuid(),
-            Name = "Default",
-            Share = false,
-            SharedUsers = [],
-            Type = "Expense",
-            UserName = name,
-            Categories = [
-                new Category{
-                    Color = "#0000",
-                    Goal = 0,
-                    Name = "Habitação",
-                    Groups = [
-                        new Group{Name = "Internet", Goal = 0},
-                        new Group{Name = "Celular", Goal = 0},
-                        new Group{Name = "Agua", Goal = 0},
-                        new Group{Name = "Energia", Goal = 0},
-                        new Group{Name = "TV Stream", Goal = 0},
-                        new Group{Name = "Manutenção", Goal = 0},
-                    ]
-                },
-                new Category{
-                    Color = "#0000",
-                    Goal = 0,
-                    Name = "Transporte",
-                    Groups = [
-                        new Group{Name = "Combustível", Goal = 0},
-                        new Group{Name = "Seguro", Goal = 0},
-                        new Group{Name = "Estacionamento", Goal = 0},
-                        new Group{Name = "Manutenção", Goal = 0},
-                    ]
-                },
-                new Category{
-                    Color = "#0000",
-                    Goal = 0,
-                    Name = "Alimentação",
-                    Groups = [
-                        new Group{Name = "Supermercado", Goal = 0},
-                        new Group{Name = "Lanches e afins", Goal = 0},
-                    ]
-                },
-                new Category{
-                    Color = "#0000",
-                    Goal = 0,
-                    Name = "Saúde",
-                    Groups = [
-                        new Group{Name = "Famácia", Goal = 0},
-                        new Group{Name = "Convênio", Goal = 0},
-                        new Group{Name = "Consultas e Exames", Goal = 0},
-                    ]
-                },
-                new Category{
-                    Color = "#0000",
-                    Goal = 0,
-                    Name = "Lazer",
-                    Groups = [
-                        new Group{Name = "Hospedagem", Goal = 0},
-                        new Group{Name = "Passagem aérea", Goal = 0},
-                        new Group{Name = "Passeios e afins", Goal = 0},
-                    ]
-                },
-            ]
-        };
-        _ledgerRepository.Add(ledger);
-        var user = new User
-        {
-            Name = name,
-            Email = email,
-            Password = password,
-            Status = "Guest"
-        };
-
-        var config = new Config { LedgerId = ledger.Id };
-        user.Config = config;
+        var ledger = Ledger.Create(name: "Default",
+                                   type: "Expense",
+                                   userName: name,
+                                   categories: new List<LedgerCategory>
+                                   {
+                                        LedgerCategory.Create(name: "Habitação",
+                                                            goal: 0,
+                                                            color: "#0000",
+                                                            groups: new List<CategoryGroup>
+                                                            {
+                                                                CategoryGroup.Create(name: "Internet", goal: 0),
+                                                                CategoryGroup.Create(name: "Celular", goal: 0),
+                                                                CategoryGroup.Create(name: "Agua", goal: 0),
+                                                                CategoryGroup.Create(name: "Energia", goal: 0),
+                                                                CategoryGroup.Create(name: "TV Stream", goal: 0),
+                                                                CategoryGroup.Create(name: "Manutenção", goal: 0)
+                                                            }),
+                                        LedgerCategory.Create(name: "Transporte",
+                                                            goal: 0,
+                                                            color: "#0000",
+                                                            groups: new List<CategoryGroup>
+                                                            {
+                                                                CategoryGroup.Create(name: "Combustível", goal: 0),
+                                                                CategoryGroup.Create(name: "Seguro", goal: 0),
+                                                                CategoryGroup.Create(name: "Estacionamento", goal: 0),
+                                                                CategoryGroup.Create(name: "Manutenção", goal: 0)
+                                                            }),
+                                        LedgerCategory.Create(name: "Alimentação",
+                                                            goal: 0,
+                                                            color: "#0000",
+                                                            groups: new List<CategoryGroup>
+                                                            {
+                                                                CategoryGroup.Create(name: "Supermercado", goal: 0),
+                                                                CategoryGroup.Create(name: "Lanches e afins", goal: 0)
+                                                            }),
+                                        LedgerCategory.Create(name: "Saúde",
+                                                            goal: 0,
+                                                            color: "#0000",
+                                                            groups: new List<CategoryGroup>
+                                                            {
+                                                                CategoryGroup.Create(name: "Famácia", goal: 0),
+                                                                CategoryGroup.Create(name: "Convênio", goal: 0),
+                                                                CategoryGroup.Create(name: "Consultas e Exames", goal: 0)
+                                                            }),
+                                        LedgerCategory.Create(name: "Lazer",
+                                                            goal: 0,
+                                                            color: "#0000",
+                                                            groups: new List<CategoryGroup>
+                                                            {
+                                                                CategoryGroup.Create(name: "Hospedagem", goal: 0),
+                                                                CategoryGroup.Create(name: "Passagem aérea", goal: 0),
+                                                                CategoryGroup.Create(name: "Passeios e afins", goal: 0)
+                                                            }) 
+                                   });
+        var user = User.Create(name: name,
+                               email: email,
+                               password: password,
+                               status: "Guest",
+                               config: UserConfig.Create(ledger.Id));
         _userRepository.Add(user);
 
         var token = _jwtTokenGenerator.GeneratorToken(user);
