@@ -1,54 +1,35 @@
 using BudgetControl.Application.Authentication.Common;
-using BudgetControl.Application.Contratcts;
 using BudgetControl.Domain.Common.Errors;
 using BudgetControl.Domain.LedgerAggregate;
 using BudgetControl.Domain.LedgerAggregate.Entities;
 using BudgetControl.Domain.UserAggregate;
 using BudgetControl.Domain.UserAggregate.Entities;
 using BudgetControl.Interfaces.Persistence.Authentication;
-using BudgetControl.Interfaces.Persistence.Ledgers;
-using BudgetControl.Interfaces.Services;
 using ErrorOr;
+using MediatR;
 
-namespace BudgetControl.Application.Services;
+namespace BudgetControl.Application.Authentication.Commands.Register;
 
-public class AuthenticationService : IAuthenticationService<AuthenticationResult>
+public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<AuthenticationResult>>
 {
-    private readonly IJwtTokenGenerator<User> _jwtTokenGenerator;
+      private readonly IJwtTokenGenerator<User> _jwtTokenGenerator;
     private readonly IUserRepository<User> _userRepository;
-    private readonly ILedgerRepository<Ledger> _ledgerRepository;
 
-    public AuthenticationService(IJwtTokenGenerator<User> jwtTokenGenerator, IUserRepository<User> userRepository, ILedgerRepository<Ledger> ledgerRepository)
+    public RegisterCommandHandler(IUserRepository<User> userRepository, IJwtTokenGenerator<User> jwtTokenGenerator)
     {
-        _jwtTokenGenerator = jwtTokenGenerator;
         _userRepository = userRepository;
-        _ledgerRepository = ledgerRepository;
-    }
-    public ErrorOr<AuthenticationResult> Login(string email, string password)
-    {
-        if (_userRepository.GetUserByEmail(email) is not User user)
-        {
-            return Errors.Authentication.InvalidCredential;
-        }
-
-        if (user.Password != password)
-        {
-            return new[] { Errors.Authentication.InvalidCredential };
-        }
-
-        var token = _jwtTokenGenerator.GeneratorToken(user);
-        return new AuthenticationResult(user, token);
+        _jwtTokenGenerator = jwtTokenGenerator;
     }
 
-    public ErrorOr<AuthenticationResult> Register(string name, string email, string password, string confirmPassword)
+    public async Task<ErrorOr<AuthenticationResult>> Handle(RegisterCommand command, CancellationToken cancellationToken)
     {
-        if (_userRepository.GetUserByEmail(email) is not null)
-        {
-            return Errors.User.DuplicateEmail;
-        }
+      if (_userRepository.GetUserByEmail(command.Email) is not null)
+            {
+                return Errors.User.DuplicateEmail;
+            }
         var ledger = Ledger.Create(name: "Default",
                                    type: "Expense",
-                                   userName: name,
+                                   userName: command.Name,
                                    categories: new List<LedgerCategory>
                                    {
                                         LedgerCategory.Create(name: "Habitação",
@@ -100,14 +81,13 @@ public class AuthenticationService : IAuthenticationService<AuthenticationResult
                                                                 CategoryGroup.Create(name: "Passeios e afins", goal: 0)
                                                             }) 
                                    });
-        var user = User.Create(name: name,
-                               email: email,
-                               password: password,
+        var user = User.Create(name: command.Name,
+                               email: command.Email,
+                               password: command.Password,
                                status: "Guest",
                                config: UserConfig.Create(ledger.Id));
         _userRepository.Add(user);
 
         var token = _jwtTokenGenerator.GeneratorToken(user);
-        return new AuthenticationResult(user, token);
-    }
+        return new AuthenticationResult(user, token);    }
 }

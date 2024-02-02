@@ -1,32 +1,32 @@
-using BudgetControl.Application.Contratcts;
+using BudgetControl.Application.Authentication.Commands.Register;
+using BudgetControl.Application.Authentication.Common;
+using BudgetControl.Application.Authentication.Queries.Login;
 using BudgetControl.Contracts.Authentication.Request;
 using BudgetControl.Contracts.Authentication.Response;
-using BudgetControl.Interfaces.Services;
 using ErrorOr;
 using MapsterMapper;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
+
 
 namespace BudgetControl.Api.Controllers;
 [Route("auth")]
 public class AuthenticationController : ApiController
 {
-    private readonly IAuthenticationService<AuthenticationResult> _authenticationService;
     private readonly IMapper _mapper;
+    private readonly ISender _mediator;
 
-    public AuthenticationController(IAuthenticationService<AuthenticationResult> authenticationService, IMapper mapper)
+    public AuthenticationController(IMapper mapper, ISender mediator)
     {
-        _authenticationService = authenticationService;
         _mapper = mapper;
+        _mediator = mediator;
     }
 
     [HttpPost("register")]
-    public IActionResult Register(RegisterRequest request)
+    public async Task<IActionResult> Register(RegisterRequest request)
     {
-        ErrorOr<AuthenticationResult> authResult = _authenticationService.Register(
-            request.Name,
-            request.Email,
-            request.Password,
-            request.ConfirmPassword);
+        var command = _mapper.Map<RegisterCommand>(request);
+        ErrorOr<AuthenticationResult> authResult = await _mediator.Send(command);
 
         return authResult.Match(
           authResult => Ok(_mapper.Map<AuthenticationResponse>(authResult)),
@@ -35,9 +35,10 @@ public class AuthenticationController : ApiController
     }
 
     [HttpPost("login")]
-    public IActionResult Login(LoginRequest request)
+    public async Task<IActionResult> Login(LoginRequest request)
     {
-        ErrorOr<AuthenticationResult> authResult = _authenticationService.Login(request.Email, request.Password);
+        var query = _mapper.Map<LoginQuery>(request);
+        ErrorOr<AuthenticationResult> authResult = await _mediator.Send(query);
         return authResult.Match(
         authResult => Ok(_mapper.Map<AuthenticationResponse>(authResult)),
         errors => Problem(errors)
