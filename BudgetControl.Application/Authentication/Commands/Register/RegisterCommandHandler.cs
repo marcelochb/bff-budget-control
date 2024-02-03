@@ -5,6 +5,7 @@ using BudgetControl.Domain.LedgerAggregate.Entities;
 using BudgetControl.Domain.UserAggregate;
 using BudgetControl.Domain.UserAggregate.Entities;
 using BudgetControl.Interfaces.Persistence.Authentication;
+using BudgetControl.Interfaces.Persistence.Ledgers;
 using ErrorOr;
 using MediatR;
 
@@ -12,13 +13,15 @@ namespace BudgetControl.Application.Authentication.Commands.Register;
 
 public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<AuthenticationResult>>
 {
-      private readonly IJwtTokenGenerator<User> _jwtTokenGenerator;
+    private readonly IJwtTokenGenerator<User> _jwtTokenGenerator;
     private readonly IUserRepository<User> _userRepository;
+    private readonly ILedgerRepository<Ledger> _ledgerRepository;
 
-    public RegisterCommandHandler(IUserRepository<User> userRepository, IJwtTokenGenerator<User> jwtTokenGenerator)
+    public RegisterCommandHandler(IUserRepository<User> userRepository, IJwtTokenGenerator<User> jwtTokenGenerator, ILedgerRepository<Ledger> ledgerRepository)
     {
-        _userRepository = userRepository;
         _jwtTokenGenerator = jwtTokenGenerator;
+        _userRepository = userRepository;
+        _ledgerRepository = ledgerRepository;
     }
 
     public async Task<ErrorOr<AuthenticationResult>> Handle(RegisterCommand command, CancellationToken cancellationToken)
@@ -79,8 +82,9 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<A
                                                                 CategoryGroup.Create(name: "Hospedagem", goal: 0),
                                                                 CategoryGroup.Create(name: "Passagem aérea", goal: 0),
                                                                 CategoryGroup.Create(name: "Passeios e afins", goal: 0)
-                                                            }) 
+                                                            })
                                    });
+        _ledgerRepository.Add(ledger);
         var user = User.Create(name: command.Name,
                                email: command.Email,
                                password: command.Password,
