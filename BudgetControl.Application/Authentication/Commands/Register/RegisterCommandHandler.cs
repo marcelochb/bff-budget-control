@@ -89,5 +89,6 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<A
         _userRepository.Add(user);
 
         var token = _jwtTokenGenerator.GeneratorToken(user);
-        return new AuthenticationResult(user, token);    }
+        return new AuthenticationResult(user, token);
+    }
 }

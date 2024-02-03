@@ -4,4 +4,7 @@ using MediatR;
 
 namespace BudgetControl.Application.Authentication.Commands.Register;
 
-public record RegisterCommand(string Name, string Email, string Password, string ConfirmPassword) : IRequest<ErrorOr<AuthenticationResult>>;
+public record RegisterCommand(string Name,
+                              string Email,
+                              string Password,
+                              string ConfirmPassword) : IRequest<ErrorOr<AuthenticationResult>>;
