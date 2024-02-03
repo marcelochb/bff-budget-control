@@ -1,0 +1,4 @@
+@host=http://localhost:5202
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJnaXZlbl9uYW1lIjoiSm9obiIsImVtYWlsIjoibWFyY2Vsb2NoYkBnbWFpbC5jb20iLCJqdGkiOiI4M2UxZmQ5MS1jMDNkLTQxZTItOWUxMi0zOTZlZjVkMzEyZTEiLCJleHAiOjE3MDY5NjkwMzUsImlzcyI6IkJ1ZGdldENvbnRyb2wiLCJhdWQiOiJCdWRnZXRDb250cm9sIn0.jsbFgn9hr7nf8ZHwypbgp3cnsZ-IyNeCY7XBL3q2J5s
+GET {{host}}/ledgers
+Authorization: Bearer {{token}}
