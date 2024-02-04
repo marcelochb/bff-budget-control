@@ -8,7 +8,7 @@ public class RegisterCommandValidator : AbstractValidator<RegisterCommand>
     {
         RuleFor(v => v.Name)
             .NotEmpty().WithMessage("Name is required.");
-            
+
         RuleFor(v => v.Email)
             .NotEmpty().WithMessage("Email is required.")
             .EmailAddress().WithMessage("A valid email is required.");
