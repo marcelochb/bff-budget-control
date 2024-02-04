@@ -1,6 +1,8 @@
 using BudgetControl.Application.Ledgers.Contratcts;
+using BudgetControl.Application.Ledgers.Queries.Get;
 using BudgetControl.Application.Ledgers.Queries.List;
 using BudgetControl.Contracts.Ledgers.Response;
+using BudgetControl.Domain.LedgerAggregate;
 using ErrorOr;
 using MapsterMapper;
 using MediatR;
@@ -28,6 +30,15 @@ public class LedgersController : ApiController
     ErrorOr<LedgerListResult> ledgerListResult = await _mediator.Send(new LedgerListQuery(userId));
     return ledgerListResult.Match(
       ledgerListResult => Ok(_mapper.Map<LedgerListResponse>(ledgerListResult)),
+      errors => Problem(errors)
+    );
+  }
+  [HttpGet("{id}")]
+  public async Task<IActionResult> GetLedger(string id)
+  {
+    ErrorOr<Ledger> ledger = await _mediator.Send(new LedgerGetQuery(id));
+    return ledger.Match(
+      ledger => Ok(_mapper.Map<LedgerResponse>(ledger)),
       errors => Problem(errors)
     );
   }

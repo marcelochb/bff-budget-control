@@ -4,5 +4,6 @@ public interface IUserRepository<T>
 {
     T? GetUserByEmail(string email);
     void Add(T user);
+    void Update(T user);
 
 }

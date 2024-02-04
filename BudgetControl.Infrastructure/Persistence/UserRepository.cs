@@ -16,4 +16,10 @@ public class UserRepository : IUserRepository<User>
     {
         _users.Add(user);
     }
+
+    public void Update(User user)
+    {
+        var index = _users.FindIndex(u => u.Id == user.Id);
+        if (index > -1) _users[index] = user;
+    }
 }

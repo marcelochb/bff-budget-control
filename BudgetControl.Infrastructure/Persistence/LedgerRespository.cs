@@ -26,8 +26,9 @@ public class LedgerRepository : ILedgerRepository<Ledger>
         _ledgers.Remove(_ledgers.Single(element => element.Id.ToString() == id));
     }
 
-    public void Update(string id, Ledger ledger)
+    public void Update(Ledger ledger)
     {
-
+        var index = _ledgers.FindIndex(element => element.Id.ToString() == ledger.Id.ToString());
+        if (index > -1) _ledgers[index] = ledger;
     }
 }
