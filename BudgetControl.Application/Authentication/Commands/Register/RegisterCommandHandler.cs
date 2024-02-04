@@ -30,9 +30,13 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<A
             {
                 return Errors.User.DuplicateEmail;
             }
+        var user = User.Create(name: command.Name,
+                               email: command.Email,
+                               password: command.Password,
+                               status: "Guest");
         var ledger = Ledger.Create(name: "Default",
                                    type: "Expense",
-                                   userName: command.Name,
+                                   user: user,
                                    categories: new List<LedgerCategory>
                                    {
                                         LedgerCategory.Create(name: "Habitação",
@@ -84,12 +88,8 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<A
                                                                 CategoryGroup.Create(name: "Passeios e afins", goal: 0)
                                                             })
                                    });
+        user.UpdateConfig(UserConfig.Create(ledger.Id));
         _ledgerRepository.Add(ledger);
-        var user = User.Create(name: command.Name,
-                               email: command.Email,
-                               password: command.Password,
-                               status: "Guest",
-                               config: UserConfig.Create(ledger.Id));
         _userRepository.Add(user);
 
         var token = _jwtTokenGenerator.GeneratorToken(user);

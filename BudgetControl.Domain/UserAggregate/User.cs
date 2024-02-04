@@ -11,32 +11,34 @@ public sealed class User : AggregateRoot<UserId>
     public string Password { get; }
     public string Status { get; }
 
-    public UserConfig Config { get; }
+    public UserConfig? Config { get; set; }
 
     private User(
         UserId userId,
         string name,
         string email,
         string password,
-        string status,
-        UserConfig config
+        string status
     ) : base(userId)
     {
         Name = name;
         Email = email;
         Password = password;
         Status = status;
-        Config = config;
     }
 
     public static User Create(
         string name,
         string email,
         string password,
-        string status,
-        UserConfig config
+        string status
     )
     {
-        return new(UserId.CreateUnique(), name, email, password, status, config);
+        return new(UserId.CreateUnique(), name, email, password, status);
+    }
+
+    public  void UpdateConfig(UserConfig config)
+    {
+        Config = config;
     }
 }
