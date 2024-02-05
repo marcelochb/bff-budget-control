@@ -8,7 +8,6 @@ namespace BudgetControl.Application.Ledgers.Queries.Get;
 public class LedgerGetQueryHandler : IRequestHandler<LedgerGetQuery, ErrorOr<Ledger>>
 {
     private readonly ILedgerRepository<Ledger> _ledgerRepository;
-
     public LedgerGetQueryHandler(ILedgerRepository<Ledger> ledgerRepository)
     {
         _ledgerRepository = ledgerRepository;
