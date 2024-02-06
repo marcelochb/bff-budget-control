@@ -28,15 +28,15 @@ public class LedgerCreateCommandHandler : IRequestHandler<LedgerCreateCommand, E
             return Errors.User.NotFound;
         }
 
-        var ledger = Ledger.Create(name: command.Ledger.Name,
-                                   type: command.Ledger.Type,
+        var ledger = Ledger.Create(name: command.Name,
+                                   type: command.Type,
                                    user: user,
-                                   categories: CreateCategories(command.Ledger.Categories));
+                                   categories: CreateCategories(command.Categories));
         _ledgerRepository.Add(ledger);
         return ledger;
     }
 
-    private List<LedgerCategory> CreateCategories(IReadOnlyList<LedgerCategory> categories)
+    private List<LedgerCategory> CreateCategories(List<LedgerCategoryCreateCommand> categories)
     {
         var _categories = new List<LedgerCategory>();
         foreach (var category in categories)

@@ -1,0 +1,23 @@
+@host=http://localhost:5202
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJnaXZlbl9uYW1lIjoiSm9obiIsImVtYWlsIjoibWFyY2Vsb2NoYkBnbWFpbC5jb20iLCJqdGkiOiI3MjY0ZTBkOS0zMzI5LTRhNWMtYTAyMC0yYmY4OTdmMWYzYzQiLCJleHAiOjE3MDcyMzMyODIsImlzcyI6IkJ1ZGdldENvbnRyb2wiLCJhdWQiOiJCdWRnZXRDb250cm9sIn0.x4U0C7dzUPO5_HFzKn91L2x9NkdoGISoUE4gB4Ws-h4
+POST {{host}}/ledgers
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+  {
+    "name": "Test Ledger",
+    "type": "This is a test ledger",
+    "categories": [
+      {
+        "name": "Test Category",
+        "color": "#0000",
+        "goal": 1000,
+        "groups": [
+          {
+            "name": "Test Group",
+            "goal": 1000
+          }
+        ]
+      }
+    ]
+  }

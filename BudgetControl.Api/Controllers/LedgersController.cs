@@ -1,6 +1,8 @@
+using BudgetControl.Application.Ledgers.Commands.Create;
 using BudgetControl.Application.Ledgers.Contratcts;
 using BudgetControl.Application.Ledgers.Queries.Get;
 using BudgetControl.Application.Ledgers.Queries.List;
+using BudgetControl.Contracts.Ledgers.Request;
 using BudgetControl.Contracts.Ledgers.Response;
 using BudgetControl.Domain.LedgerAggregate;
 using ErrorOr;
@@ -39,6 +41,19 @@ public class LedgersController : ApiController
     ErrorOr<Ledger> ledger = await _mediator.Send(new LedgerGetQuery(id));
     return ledger.Match(
       ledger => Ok(_mapper.Map<LedgerResponse>(ledger)),
+      errors => Problem(errors)
+    );
+  }
+  [HttpPost]
+  public async Task<IActionResult> CreateLedger([FromBody] LedgerCreateRequest request)
+  {
+    var userId = HttpContext.User.Claims.First(x => x.Type == "jti").Value;
+    var newRequest = request with { UserId = userId };
+
+    var command = _mapper.Map<LedgerCreateCommand>(newRequest);
+    ErrorOr<Ledger> ledger = await _mediator.Send(command);
+    return ledger.Match(
+      ledger => CreatedAtAction(nameof(GetLedger), new { id = ledger.Id }, _mapper.Map<LedgerResponse>(ledger)),
       errors => Problem(errors)
     );
   }

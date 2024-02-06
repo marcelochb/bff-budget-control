@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace BudgetControl.Application.Ledgers.Commands.Create.Validators;
 
-public class CategoryGroupCreateCommandValidator : AbstractValidator<CategoryGroup>
+public class CategoryGroupCreateCommandValidator : AbstractValidator<CategoryGroupCreateCommand>
 {
     public CategoryGroupCreateCommandValidator()
     {

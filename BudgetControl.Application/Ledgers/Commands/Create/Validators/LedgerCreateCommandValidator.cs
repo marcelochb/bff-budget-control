@@ -6,10 +6,9 @@ public class LedgerCreateCommandValidator : AbstractValidator<LedgerCreateComman
 {
     public LedgerCreateCommandValidator()
     {
-        RuleFor(x => x.Ledger.Name).NotEmpty();
-        RuleFor(x => x.Ledger.Type).NotEmpty();
-        RuleFor(x => x.Ledger.Categories).NotEmpty();
-        RuleForEach(x => x.Ledger.Categories).SetValidator(new LedgerCategoryCreateCommandValidator());
-        RuleFor(x => x.UserId).NotEmpty();
+        RuleFor(x => x.Name).NotEmpty();
+        RuleFor(x => x.Type).NotEmpty();
+        RuleFor(x => x.Categories).NotEmpty();
+        RuleForEach(x => x.Categories).SetValidator(new LedgerCategoryCreateCommandValidator());
     }
 }
