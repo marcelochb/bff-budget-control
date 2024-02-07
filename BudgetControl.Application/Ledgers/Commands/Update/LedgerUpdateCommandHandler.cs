@@ -23,7 +23,7 @@ public class LedgerUpdateCommandHandler : IRequestHandler<LedgerUpdateCommand, E
         {
             return Errors.Ledger.NotFound;
         }
-        Ledger.Update( command.Name, command.Type);
+        ledger.Update(command.Name, command.Type);
         _ledgerRepository.Update(ledger);
 
         return new LedgerUpdateResult(ledger.Name, ledger.Type);

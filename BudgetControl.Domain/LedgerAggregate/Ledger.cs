@@ -32,7 +32,7 @@ public sealed class Ledger : AggregateRoot<LedgerId>
             categories);
     }
 
-    public static void Update(string name, string type)
+    public void Update(string name, string type)
     {
         Name = name;
         Type = type;
