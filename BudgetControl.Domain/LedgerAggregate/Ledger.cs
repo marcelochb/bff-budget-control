@@ -7,8 +7,8 @@ namespace BudgetControl.Domain.LedgerAggregate;
 
 public sealed class Ledger : AggregateRoot<LedgerId>
 {
-    public string Name { get; }
-    public string Type { get; }
+    public string Name { get; set; }
+    public string Type { get; set; }
     public User User { get; }
     private readonly List<LedgerCategory> _categories = new();
 
@@ -30,5 +30,11 @@ public sealed class Ledger : AggregateRoot<LedgerId>
             type,
             user,
             categories);
+    }
+
+    public static void Update(string name, string type)
+    {
+        Name = name;
+        Type = type;
     }
 }

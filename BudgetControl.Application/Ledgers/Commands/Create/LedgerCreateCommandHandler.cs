@@ -23,7 +23,7 @@ public class LedgerCreateCommandHandler : IRequestHandler<LedgerCreateCommand, E
 
     public async Task<ErrorOr<Ledger>> Handle(LedgerCreateCommand command, CancellationToken cancellationToken)
     {
-        if (_ledgerRepository.GetLedgerByName(command.Name))
+        if (_ledgerRepository.GetByName(command.Name))
         {
             return Errors.Ledger.DuplicateName;
         }

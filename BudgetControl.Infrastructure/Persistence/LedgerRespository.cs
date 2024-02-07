@@ -11,12 +11,12 @@ public class LedgerRepository : ILedgerRepository<Ledger>
         _ledgers.Add(ledger);
     }
 
-    public Ledger? GetLedgerById(string id)
+    public Ledger? GetById(string id)
     {
         return _ledgers.SingleOrDefault(element => element.Id.Value.ToString() == id);
     }
 
-    public bool GetLedgerByName(string name)
+    public bool GetByName(string name)
     {
         return _ledgers.Any(element => element.Name == name);
     }
