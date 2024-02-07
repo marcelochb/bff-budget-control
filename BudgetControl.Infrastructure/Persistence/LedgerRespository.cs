@@ -16,6 +16,11 @@ public class LedgerRepository : ILedgerRepository<Ledger>
         return _ledgers.SingleOrDefault(element => element.Id.Value.ToString() == id);
     }
 
+    public bool GetLedgerByName(string name)
+    {
+        return _ledgers.Any(element => element.Name == name);
+    }
+
     public List<Ledger> GetLedgersByUserId(string userId)
     {
         return _ledgers.FindAll(x => x.User.Id.Value.ToString() == userId);

@@ -1,7 +1,7 @@
+using BudgetControl.Application.Ledgers.Commands.Common.Validators;
 using FluentValidation;
 
-namespace BudgetControl.Application.Ledgers.Commands.Create.Validators;
-
+namespace BudgetControl.Application.Ledgers.Commands.Create;
 public class LedgerCreateCommandValidator : AbstractValidator<LedgerCreateCommand>
 {
     public LedgerCreateCommandValidator()
@@ -9,6 +9,6 @@ public class LedgerCreateCommandValidator : AbstractValidator<LedgerCreateComman
         RuleFor(x => x.Name).NotEmpty();
         RuleFor(x => x.Type).NotEmpty();
         RuleFor(x => x.Categories).NotEmpty();
-        RuleForEach(x => x.Categories).SetValidator(new LedgerCategoryCreateCommandValidator());
+        RuleForEach(x => x.Categories).SetValidator(new LedgerCategoryCreateUpdateCommandValidator());
     }
 }

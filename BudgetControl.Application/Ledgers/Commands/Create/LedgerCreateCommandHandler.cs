@@ -1,3 +1,4 @@
+using BudgetControl.Application.Ledgers.Commands.Common;
 using BudgetControl.Domain.Common.Errors;
 using BudgetControl.Domain.LedgerAggregate;
 using BudgetControl.Domain.LedgerAggregate.Entities;
@@ -22,6 +23,11 @@ public class LedgerCreateCommandHandler : IRequestHandler<LedgerCreateCommand, E
 
     public async Task<ErrorOr<Ledger>> Handle(LedgerCreateCommand command, CancellationToken cancellationToken)
     {
+        if (_ledgerRepository.GetLedgerByName(command.Name))
+        {
+            return Errors.Ledger.DuplicateName;
+        }
+
         var user = _userRepository.Get(command.UserId);
         if (user is null)
         {
@@ -36,7 +42,7 @@ public class LedgerCreateCommandHandler : IRequestHandler<LedgerCreateCommand, E
         return ledger;
     }
 
-    private List<LedgerCategory> CreateCategories(List<LedgerCategoryCreateCommand> categories)
+    private List<LedgerCategory> CreateCategories(List<LedgerCategoryCreateUpdateCommand> categories)
     {
         var _categories = new List<LedgerCategory>();
         foreach (var category in categories)
