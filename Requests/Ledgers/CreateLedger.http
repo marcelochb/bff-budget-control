@@ -1,23 +1,10 @@
 @host=http://localhost:5202
-@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJnaXZlbl9uYW1lIjoiSm9obiIsImVtYWlsIjoibWFyY2Vsb2NoYkBnbWFpbC5jb20iLCJqdGkiOiJkNmJkMWY5Yi1lNjg5LTQxYTYtOTZhNS0wYTg4ODVlZGIwNTAiLCJleHAiOjE3MDcyNzM0NjQsImlzcyI6IkJ1ZGdldENvbnRyb2wiLCJhdWQiOiJCdWRnZXRDb250cm9sIn0.MN3mV13XKjrNngzMn2JlsnPw34da_X9V7matiIVJkHU
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJnaXZlbl9uYW1lIjoiSm9obiIsImVtYWlsIjoibWFyY2Vsb2NoYkBnbWFpbC5jb20iLCJqdGkiOiI5MDZiMWIxNC1iMGM0LTQ1MmMtYTk1MC01YjJhZmIwN2RhODkiLCJleHAiOjE3MDc0MzMzMzIsImlzcyI6IkJ1ZGdldENvbnRyb2wiLCJhdWQiOiJCdWRnZXRDb250cm9sIn0.PiIK2x-rOSAp5g6UtqZIqs_oZskHneSqW5_C2EkmvYA
 POST {{host}}/ledgers
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
   {
     "name": "Test Ledger",
-    "type": "This is a test ledger",
-    "categories": [
-      {
-        "name": "Test Category",
-        "color": "#0000",
-        "goal": 1000,
-        "groups": [
-          {
-            "name": "Test Group",
-            "goal": 1000
-          }
-        ]
-      }
-    ]
+    "type": "This is a test ledger"
   }

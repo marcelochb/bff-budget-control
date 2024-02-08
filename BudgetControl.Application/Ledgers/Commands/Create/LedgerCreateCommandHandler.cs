@@ -36,8 +36,7 @@ public class LedgerCreateCommandHandler : IRequestHandler<LedgerCreateCommand, E
 
         var ledger = Ledger.Create(name: command.Name,
                                    type: command.Type,
-                                   user: user,
-                                   categories: CreateCategories(command.Categories));
+                                   user: user);
         _ledgerRepository.Add(ledger);
         return ledger;
     }

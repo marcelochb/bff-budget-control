@@ -47,9 +47,13 @@ public class LedgersController : ApiController
   [HttpPost]
   public async Task<IActionResult> CreateLedger([FromBody] LedgerCreateRequest request)
   {
-    var userId = HttpContext.User.Claims.First(x => x.Type == "jti").Value;
 
-    var command = _mapper.Map<LedgerCreateCommand>(request with { UserId = userId });
+        var command = _mapper.Map<LedgerCreateCommand>(
+          request with 
+              { 
+                UserId = (string?)HttpContext.User.Claims.First(x => x.Type == "jti").Value 
+              }
+          );
     ErrorOr<Ledger> ledger = await _mediator.Send(command);
     return ledger.Match(
       ledger => Ok(_mapper.Map<LedgerResponse>(ledger)),

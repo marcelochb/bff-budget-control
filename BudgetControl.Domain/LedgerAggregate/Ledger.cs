@@ -14,7 +14,7 @@ public sealed class Ledger : AggregateRoot<LedgerId>
 
     public IReadOnlyList<LedgerCategory> Categories => _categories.AsReadOnly();
 
-    private Ledger(LedgerId ledgerId, string name, string type, User user, List<LedgerCategory> categories) : base(ledgerId)
+    private Ledger(LedgerId ledgerId, string name, string type, User user, List<LedgerCategory>? categories) : base(ledgerId)
     {
         Name = name;
         Type = type;
@@ -22,7 +22,7 @@ public sealed class Ledger : AggregateRoot<LedgerId>
         _categories = categories;
     }
 
-    public static Ledger Create(string name, string type, User user, List<LedgerCategory> categories)
+    public static Ledger Create(string name, string type, User user, List<LedgerCategory>? categories = null)
     {
         return new(
             LedgerId.CreateUnique(),
