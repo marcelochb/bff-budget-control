@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Options;
 using System.Text;
+using BudgetControl.Interfaces.Persistence.Categories;
+using BudgetControl.Domain.LedgerAggregate.Entities;
 
 namespace BudgetControl.Infrastructure;
 
@@ -25,6 +27,7 @@ public static class DependencyInjection
         services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
         services.AddScoped<IUserRepository<User>, UserRepository>();
         services.AddScoped<ILedgerRepository<Ledger>, LedgerRepository>();
+        services.AddScoped<ICategoryRepository<LedgerCategory>, CategoryRepository>();
         return services;
     }
 
