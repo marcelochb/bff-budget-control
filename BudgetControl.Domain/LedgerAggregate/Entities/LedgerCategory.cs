@@ -10,23 +10,23 @@ public sealed class LedgerCategory : Entity<LedgerCategoryId>
     public string Color { get; }
     private readonly List<CategoryGroup> _groups = new();
 
-    public IReadOnlyList<CategoryGroup> Groups => _groups.AsReadOnly();
+    public List<CategoryGroup> Groups => _groups.ToList();
     private LedgerCategory(LedgerCategoryId ledgerCategoryId,
                            string name,
                            float goal,
                            string color,
-                           List<CategoryGroup> groups) : base(ledgerCategoryId)
+                           List<CategoryGroup>? groups = null) : base(ledgerCategoryId)
     {
         Name = name;
         Goal = goal;
         Color = color;
-        _groups = groups;
+        _groups = groups ?? new();
     }
 
     public static LedgerCategory Create(string name,
                                         float goal,
                                         string color,
-                                        List<CategoryGroup> groups)
+                                        List<CategoryGroup>? groups = null)
     {
         return new(
                 LedgerCategoryId.CreateUnique(),

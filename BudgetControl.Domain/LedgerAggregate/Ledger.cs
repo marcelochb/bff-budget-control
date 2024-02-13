@@ -12,14 +12,14 @@ public sealed class Ledger : AggregateRoot<LedgerId>
     public User User { get; }
     private readonly List<LedgerCategory> _categories = new();
 
-    public IReadOnlyList<LedgerCategory> Categories => _categories.AsReadOnly();
+    public List<LedgerCategory> Categories => _categories.ToList();
 
-    private Ledger(LedgerId ledgerId, string name, string type, User user, List<LedgerCategory>? categories) : base(ledgerId)
+    private Ledger(LedgerId ledgerId, string name, string type, User user, List<LedgerCategory>? categories = null) : base(ledgerId)
     {
         Name = name;
         Type = type;
         User = user;
-        _categories = categories;
+        _categories = categories ?? new();
     }
 
     public static Ledger Create(string name, string type, User user, List<LedgerCategory>? categories = null)
