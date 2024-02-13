@@ -1,7 +1,6 @@
-using BudgetControl.Application.Ledgers.Commands.Common;
+using BudgetControl.Application.Ledgers.Contratcts;
 using BudgetControl.Domain.Common.Errors;
 using BudgetControl.Domain.LedgerAggregate;
-using BudgetControl.Domain.LedgerAggregate.Entities;
 using BudgetControl.Domain.UserAggregate;
 using BudgetControl.Interfaces.Persistence.Authentication;
 using BudgetControl.Interfaces.Persistence.Ledgers;
@@ -10,7 +9,7 @@ using MediatR;
 
 namespace BudgetControl.Application.Ledgers.Commands.Create;
 
-public class LedgerCreateCommandHandler : IRequestHandler<LedgerCreateCommand, ErrorOr<Ledger>>
+public class LedgerCreateCommandHandler : IRequestHandler<LedgerCreateCommand, ErrorOr<LedgerResult>>
 {
     private readonly ILedgerRepository<Ledger> _ledgerRepository;
     private readonly IUserRepository<User> _userRepository;
@@ -21,8 +20,9 @@ public class LedgerCreateCommandHandler : IRequestHandler<LedgerCreateCommand, E
         _userRepository = userRepository;
     }
 
-    public async Task<ErrorOr<Ledger>> Handle(LedgerCreateCommand command, CancellationToken cancellationToken)
+    public async Task<ErrorOr<LedgerResult>> Handle(LedgerCreateCommand command, CancellationToken cancellationToken)
     {
+        await Task.CompletedTask;
         if (_ledgerRepository.GetByName(command.Name))
         {
             return Errors.Ledger.DuplicateName;
@@ -38,22 +38,6 @@ public class LedgerCreateCommandHandler : IRequestHandler<LedgerCreateCommand, E
                                    type: command.Type,
                                    user: user);
         _ledgerRepository.Add(ledger);
-        return ledger;
-    }
-
-    private List<LedgerCategory> CreateCategories(List<LedgerCategoryCreateUpdateCommand> categories)
-    {
-        var _categories = new List<LedgerCategory>();
-        foreach (var category in categories)
-        {
-            var groups = new List<CategoryGroup>();
-            foreach (var group in category.Groups)
-            {
-                groups.Add(CategoryGroup.Create(group.Name, group.Goal));
-            }
-            _categories.Add(LedgerCategory.Create(category.Name, category.Goal, category.Color, groups));
-        }
-
-        return _categories;
+        return new LedgerResult(ledger.Name, ledger.Type);
     }
 }

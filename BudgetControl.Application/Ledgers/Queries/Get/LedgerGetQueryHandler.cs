@@ -1,3 +1,5 @@
+using BudgetControl.Application.Ledgers.Contratcts;
+using BudgetControl.Domain.Common.Errors;
 using BudgetControl.Domain.LedgerAggregate;
 using BudgetControl.Interfaces.Persistence.Ledgers;
 using ErrorOr;
@@ -5,7 +7,7 @@ using MediatR;
 
 namespace BudgetControl.Application.Ledgers.Queries.Get;
 
-public class LedgerGetQueryHandler : IRequestHandler<LedgerGetQuery, ErrorOr<Ledger>>
+public class LedgerGetQueryHandler : IRequestHandler<LedgerGetQuery, ErrorOr<LedgerResult>>
 {
     private readonly ILedgerRepository<Ledger> _ledgerRepository;
     public LedgerGetQueryHandler(ILedgerRepository<Ledger> ledgerRepository)
@@ -13,10 +15,14 @@ public class LedgerGetQueryHandler : IRequestHandler<LedgerGetQuery, ErrorOr<Led
         _ledgerRepository = ledgerRepository;
     }
 
-    public async Task<ErrorOr<Ledger>> Handle(LedgerGetQuery query, CancellationToken cancellationToken)
+    public async Task<ErrorOr<LedgerResult>> Handle(LedgerGetQuery query, CancellationToken cancellationToken)
     {
         var ledger = _ledgerRepository.GetById(query.Id);
-        return ledger;
+        if (ledger is null)
+        {
+            return Errors.Ledger.NotFound;
+        }
+        return new LedgerResult(ledger.Name, ledger.Type);
     }
 }
 
