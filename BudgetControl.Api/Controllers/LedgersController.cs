@@ -38,14 +38,14 @@ public class LedgersController : ApiController
   [HttpGet("{id}")]
   public async Task<IActionResult> GetLedger(string id)
   {
-    ErrorOr<Ledger> ledger = await _mediator.Send(new LedgerGetQuery(id));
+    ErrorOr<LedgerResult> ledger = await _mediator.Send(new LedgerGetQuery(id));
     return ledger.Match(
       ledger => Ok(_mapper.Map<LedgerResponse>(ledger)),
       errors => Problem(errors)
     );
   }
   [HttpPost]
-  public async Task<IActionResult> CreateLedger([FromBody] LedgerCreateRequest request)
+  public async Task<IActionResult> CreateLedger([FromBody] LedgerRequest request)
   {
 
         var command = _mapper.Map<LedgerCreateCommand>(
@@ -54,7 +54,7 @@ public class LedgersController : ApiController
                 UserId = (string?)HttpContext.User.Claims.First(x => x.Type == "jti").Value 
               }
           );
-    ErrorOr<Ledger> ledger = await _mediator.Send(command);
+    ErrorOr<LedgerResult> ledger = await _mediator.Send(command);
     return ledger.Match(
       ledger => Ok(_mapper.Map<LedgerResponse>(ledger)),
       errors => Problem(errors)
