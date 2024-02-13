@@ -30,6 +30,7 @@ public class JwtTokenGenerator : IJwtTokenGenerator<User>
             new Claim(JwtRegisteredClaimNames.GivenName, user.Name),
             new Claim(JwtRegisteredClaimNames.Email, user.Email),
             new Claim(JwtRegisteredClaimNames.Jti, user.Id.Value.ToString()),
+            new Claim("ledgerId", user?.Config?.LedgerId.Value.ToString() ?? string.Empty),
         };
 
         var securityToken = new JwtSecurityToken(
