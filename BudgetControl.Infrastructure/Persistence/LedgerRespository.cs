@@ -5,35 +5,35 @@ namespace BudgetControl.Infrastructure.Persistence;
 
 public class LedgerRepository : ILedgerRepository<Ledger>
 {
-    private static List<Ledger> _ledgers = new();
+    public static List<Ledger> ledgers = new();
     public void Add(Ledger ledger)
     {
-        _ledgers.Add(ledger);
+        ledgers.Add(ledger);
     }
 
     public Ledger? GetById(string id)
     {
-        return _ledgers.SingleOrDefault(element => element.Id.Value.ToString() == id);
+        return ledgers.SingleOrDefault(element => element.Id.Value.ToString() == id);
     }
 
     public bool GetByName(string name)
     {
-        return _ledgers.Any(element => element.Name == name);
+        return ledgers.Any(element => element.Name == name);
     }
 
     public List<Ledger> GetLedgersByUserId(string userId)
     {
-        return _ledgers.FindAll(x => x.User.Id.Value.ToString() == userId);
+        return ledgers.FindAll(x => x.User.Id.Value.ToString() == userId);
     }
 
     public void Remove(string id)
     {
-        _ledgers.Remove(_ledgers.Single(element => element.Id.ToString() == id));
+        ledgers.Remove(ledgers.Single(element => element.Id.ToString() == id));
     }
 
     public void Update(Ledger ledger)
     {
-        var index = _ledgers.FindIndex(element => element.Id.ToString() == ledger.Id.ToString());
-        if (index > -1) _ledgers[index] = ledger;
+        var index = ledgers.FindIndex(element => element.Id.ToString() == ledger.Id.ToString());
+        if (index > -1) ledgers[index] = ledger;
     }
 }
