@@ -1,5 +1,11 @@
 @host=http://localhost:5202
 @token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJnaXZlbl9uYW1lIjoiSm9obiIsImVtYWlsIjoibWFyY2Vsb2NoYkBnbWFpbC5jb20iLCJqdGkiOiIyZTkxNGEzMy1jMjNlLTQ3MzgtOTYxNi1jZDk3MDMxNGJhZTkiLCJsZWRnZXJJZCI6IjE0OWUwODkxLTMxNmItNDcxYS1hNDU1LTA3NDFmYzQ3MDBkZCIsImV4cCI6MTcwNzQ5Nzc3NCwiaXNzIjoiQnVkZ2V0Q29udHJvbCIsImF1ZCI6IkJ1ZGdldENvbnRyb2wifQ.vPOvRVNmxug9h6LSe_wbUou9ZFalt7VLuw6gbJ_X4_Y
-@id=149e0891-316b-471a-a455-0741fc4700dd
-GET {{host}}/ledgers/{{id}}
+POST {{host}}/category
 Authorization: Bearer {{token}}
+Content-Type: application/json
+
+  {
+    "name": "Test category",
+    "goal": 100,
+    "color": "#FF0000"
+  }
