@@ -1,10 +1,9 @@
 using BudgetControl.Domain.Common.Models;
 using BudgetControl.Domain.UserAggregate.Entities;
-using BudgetControl.Domain.UserAggregate.ValueObjects;
 
 namespace BudgetControl.Domain.UserAggregate;
 
-public sealed class User : AggregateRoot<UserId>
+public sealed class User : AggregateRoot<Guid>
 {
     public string Name { get; }
     public string Email { get; }
@@ -14,7 +13,7 @@ public sealed class User : AggregateRoot<UserId>
     public UserConfig? Config { get; set; }
 
     private User(
-        UserId userId,
+        Guid userId,
         string name,
         string email,
         string password,
@@ -34,7 +33,7 @@ public sealed class User : AggregateRoot<UserId>
         string status
     )
     {
-        return new(UserId.CreateUnique(), name, email, password, status);
+        return new(Guid.NewGuid(), name, email, password, status);
     }
 
     public  void UpdateConfig(UserConfig config)

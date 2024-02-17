@@ -1,11 +1,10 @@
 using BudgetControl.Domain.Common.Models;
 using BudgetControl.Domain.LedgerAggregate.Entities;
-using BudgetControl.Domain.LedgerAggregate.ValueObjects;
 using BudgetControl.Domain.UserAggregate;
 
 namespace BudgetControl.Domain.LedgerAggregate;
 
-public sealed class Ledger : AggregateRoot<LedgerId>
+public sealed class Ledger : AggregateRoot<Guid>
 {
     public string Name { get; set; }
     public string Type { get; set; }
@@ -14,7 +13,7 @@ public sealed class Ledger : AggregateRoot<LedgerId>
 
     public List<LedgerCategory> Categories => _categories.ToList();
 
-    private Ledger(LedgerId ledgerId, string name, string type, User user, List<LedgerCategory>? categories = null) : base(ledgerId)
+    private Ledger(Guid ledgerId, string name, string type, User user, List<LedgerCategory>? categories = null) : base(ledgerId)
     {
         Name = name;
         Type = type;
@@ -25,7 +24,7 @@ public sealed class Ledger : AggregateRoot<LedgerId>
     public static Ledger Create(string name, string type, User user, List<LedgerCategory>? categories = null)
     {
         return new(
-            LedgerId.CreateUnique(),
+            Guid.NewGuid(),
             name,
             type,
             user,

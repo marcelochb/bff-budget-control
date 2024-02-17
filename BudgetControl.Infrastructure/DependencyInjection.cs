@@ -13,6 +13,9 @@ using Microsoft.Extensions.Options;
 using System.Text;
 using BudgetControl.Interfaces.Persistence.Categories;
 using BudgetControl.Domain.LedgerAggregate.Entities;
+using Microsoft.EntityFrameworkCore;
+using BudgetControl.Infrastructure.Persistence.Repositories;
+using MongoDB.Driver;
 
 namespace BudgetControl.Infrastructure;
 
@@ -25,10 +28,21 @@ public static class DependencyInjection
     {
         services.AddAuth(configuration);
         services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
+        services.AddPersistance();
+        return services;
+    }
+    public static IServiceCollection AddPersistance(
+    this IServiceCollection services)
+    {
+        var mongodb = new MongoClient("mongodb://localhost:27017").GetDatabase("BudgetControl");
+        services.AddDbContext<BudgetControlDbContext>(options =>
+        {
+            options.UseMongoDB(mongodb.Client,mongodb.DatabaseNamespace.DatabaseName);
+        });
         services.AddScoped<IUserRepository<User>, UserRepository>();
         services.AddScoped<ILedgerRepository<Ledger>, LedgerRepository>();
         services.AddScoped<ICategoryRepository<LedgerCategory>, CategoryRepository>();
-        return services;
+        return services;            
     }
 
         public static IServiceCollection AddAuth(

@@ -1,9 +1,8 @@
 using BudgetControl.Domain.Common.Models;
-using BudgetControl.Domain.LedgerAggregate.ValueObjects;
 
 namespace BudgetControl.Domain.LedgerAggregate.Entities;
 
-public sealed class LedgerCategory : Entity<LedgerCategoryId>
+public sealed class LedgerCategory : Entity<Guid>
 {
     public string Name { get; }
     public float Goal { get; }
@@ -11,7 +10,7 @@ public sealed class LedgerCategory : Entity<LedgerCategoryId>
     private readonly List<CategoryGroup> _groups = new();
 
     public List<CategoryGroup> Groups => _groups.ToList();
-    private LedgerCategory(LedgerCategoryId ledgerCategoryId,
+    private LedgerCategory(Guid ledgerCategoryId,
                            string name,
                            float goal,
                            string color,
@@ -29,7 +28,7 @@ public sealed class LedgerCategory : Entity<LedgerCategoryId>
                                         List<CategoryGroup>? groups = null)
     {
         return new(
-                LedgerCategoryId.CreateUnique(),
+                Guid.NewGuid(),
                 name,
                 goal,
                 color,

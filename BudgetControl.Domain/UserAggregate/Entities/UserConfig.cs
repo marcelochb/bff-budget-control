@@ -1,22 +1,20 @@
 using BudgetControl.Domain.Common.Models;
-using BudgetControl.Domain.LedgerAggregate.ValueObjects;
-using BudgetControl.Domain.UserAggregate.ValueObjects;
 
 namespace BudgetControl.Domain.UserAggregate.Entities;
 
-public sealed class UserConfig : Entity<UserConfigId>
+public sealed class UserConfig : Entity<Guid>
 {
-    public LedgerId LedgerId { get; }
+    public Guid LedgerId { get; }
     private UserConfig(
-        UserConfigId userConfigId,
-        LedgerId ledgerId)
+        Guid userConfigId,
+        Guid ledgerId)
         : base(userConfigId)
     {
         LedgerId = ledgerId;
     }
 
-    public static UserConfig Create(LedgerId ledgerId)
+    public static UserConfig Create(Guid ledgerId)
     {
-        return new(UserConfigId.CreateUnique(), ledgerId);
+        return new(Guid.NewGuid(), ledgerId);
     }
 }
