@@ -26,7 +26,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<A
 
     public async Task<ErrorOr<AuthenticationResult>> Handle(RegisterCommand command, CancellationToken cancellationToken)
     {
-      if (_userRepository.GetUserByEmail(command.Email) is not null)
+      if (await _userRepository.GetUserByEmail(command.Email) is not null)
             {
                 return Errors.User.DuplicateEmail;
             }
@@ -36,7 +36,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<A
                                status: "Guest");
         var ledger = Ledger.Create(name: "Default",
                                    type: "Expense",
-                                   user: user,
+                                   user: LedgerUser.Create(user.Id, user.Name),
                                    categories: new List<LedgerCategory>
                                    {
                                         LedgerCategory.Create(name: "Habitação",
@@ -89,8 +89,8 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<A
                                                             })
                                    });
         user.UpdateConfig(UserConfig.Create(ledger.Id));
-        _ledgerRepository.Add(ledger);
-        _userRepository.Add(user);
+        await _userRepository.Add(user);
+        await _ledgerRepository.Add(ledger);
 
         var token = _jwtTokenGenerator.GeneratorToken(user);
         return new AuthenticationResult(user, token);

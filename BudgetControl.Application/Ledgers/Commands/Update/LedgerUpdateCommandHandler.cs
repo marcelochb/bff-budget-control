@@ -1,6 +1,7 @@
 using BudgetControl.Application.Ledgers.Contratcts;
 using BudgetControl.Domain.Common.Errors;
 using BudgetControl.Domain.LedgerAggregate;
+using BudgetControl.Domain.LedgerAggregate.Entities;
 using BudgetControl.Interfaces.Persistence.Ledgers;
 using ErrorOr;
 using MediatR;
@@ -18,13 +19,15 @@ public class LedgerUpdateCommandHandler : IRequestHandler<LedgerUpdateCommand, E
 
     public async Task<ErrorOr<LedgerUpdateResult>> Handle(LedgerUpdateCommand command, CancellationToken cancellationToken)
     {
-        var ledger = _ledgerRepository.GetById(command.Id);
+        await Task.CompletedTask;
+        var ledger = await _ledgerRepository.GetById(command.Id);
         if (ledger is null)
         {
             return Errors.Ledger.NotFound;
         }
-        ledger.Update(command.Name, command.Type);
-        _ledgerRepository.Update(ledger);
+        var ledgerToUpdate = Ledger.Create(command.Name, command.Type);
+        ledger.Update(ledgerToUpdate);
+        await _ledgerRepository.Update(ledger);
 
         return new LedgerUpdateResult(ledger.Name, ledger.Type);
     }

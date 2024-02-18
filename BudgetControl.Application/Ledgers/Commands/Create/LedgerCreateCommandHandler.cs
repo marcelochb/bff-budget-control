@@ -1,6 +1,7 @@
 using BudgetControl.Application.Ledgers.Contratcts;
 using BudgetControl.Domain.Common.Errors;
 using BudgetControl.Domain.LedgerAggregate;
+using BudgetControl.Domain.LedgerAggregate.Entities;
 using BudgetControl.Domain.UserAggregate;
 using BudgetControl.Interfaces.Persistence.Authentication;
 using BudgetControl.Interfaces.Persistence.Ledgers;
@@ -22,8 +23,7 @@ public class LedgerCreateCommandHandler : IRequestHandler<LedgerCreateCommand, E
 
     public async Task<ErrorOr<LedgerResult>> Handle(LedgerCreateCommand command, CancellationToken cancellationToken)
     {
-        await Task.CompletedTask;
-        if (_ledgerRepository.GetByName(command.Name))
+        if (await _ledgerRepository.GetByName(command.Name))
         {
             return Errors.Ledger.DuplicateName;
         }
@@ -36,8 +36,8 @@ public class LedgerCreateCommandHandler : IRequestHandler<LedgerCreateCommand, E
 
         var ledger = Ledger.Create(name: command.Name,
                                    type: command.Type,
-                                   user: user);
-        _ledgerRepository.Add(ledger);
+                                   user: LedgerUser.Create(user.Id, user.Name));
+        await _ledgerRepository.Add(ledger);
         return new LedgerResult(ledger.Name, ledger.Type);
     }
 }
