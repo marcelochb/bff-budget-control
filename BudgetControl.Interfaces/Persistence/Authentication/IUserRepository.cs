@@ -2,8 +2,8 @@ namespace BudgetControl.Interfaces.Persistence.Authentication;
 
 public interface IUserRepository<T>
 {
-    T? GetUserByEmail(string email);
-    void Add(T user);
+    Task<T?> GetUserByEmail(string email);
+    Task Add(T user);
     void Update(T user);
     T? Get(string id);
 
