@@ -1,6 +1,7 @@
-using BudgetControl.Domain;
 using BudgetControl.Domain.LedgerAggregate;
 using BudgetControl.Interfaces.Persistence.Ledgers;
+using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver.Linq;
 
 namespace BudgetControl.Infrastructure.Persistence.Repositories;
 
@@ -13,38 +14,45 @@ public class LedgerRepository : ILedgerRepository<Ledger>
         _context = context;
     }
 
-    public static List<Ledger> ledgers = new();
-    public void Add(Ledger ledger)
+    public async Task Add(Ledger ledger)
     {
-        ledgers.Add(ledger);
-        var movie = Movie.Create(ledger.Name);
-        _context.Add(movie);
-        _context.SaveChanges();
+        await _context.AddAsync(ledger);
+        await _context.SaveChangesAsync();
     }
 
-    public Ledger? GetById(string id)
+    public async Task<Ledger?> GetById(string id)
     {
-        return ledgers.SingleOrDefault(element => element.Id.ToString() == id);
+        return await _context.Ledgers.SingleOrDefaultAsync(element => element.Id.ToString() == id);
     }
 
-    public bool GetByName(string name)
+    public async Task<bool> GetByName(string name)
     {
-        return ledgers.Any(element => element.Name == name);
+        return await _context.Ledgers.AnyAsync(element => element.Name == name);
     }
 
     public List<Ledger> GetLedgersByUserId(string userId)
     {
-        return ledgers.FindAll(x => x.User.Id.ToString() == userId);
+        return _context.Ledgers.Where(element => element.User.Id.ToString() == userId).ToList();
     }
 
-    public void Remove(string id)
+    public async Task Remove(string id)
     {
-        ledgers.Remove(ledgers.Single(element => element.Id.ToString() == id));
+        var ledger = await _context.Ledgers.FindAsync(id);
+        if (ledger is not null)
+        {
+            _context.Ledgers.Remove(ledger);
+            await _context.SaveChangesAsync();
+        }
     }
 
-    public void Update(Ledger ledger)
+    public async Task Update(Ledger ledger)
     {
-        var index = ledgers.FindIndex(element => element.Id.ToString() == ledger.Id.ToString());
-        if (index > -1) ledgers[index] = ledger;
+        var ledgerToUpdate = await _context.Ledgers.FindAsync(ledger.Id);
+        if (ledgerToUpdate is not null)
+        {
+            ledgerToUpdate.Update(ledger);
+            _context.Update(ledgerToUpdate);
+            await _context.SaveChangesAsync();
+        }
     }
 }

@@ -1,30 +1,45 @@
 using BudgetControl.Domain.UserAggregate;
 using BudgetControl.Interfaces.Persistence.Authentication;
+using Microsoft.EntityFrameworkCore;
 
 namespace BudgetControl.Infrastructure.Persistence.Repositories;
 
 public class UserRepository : IUserRepository<User>
 {
-    private static readonly List<User> _users = new();
+    private readonly BudgetControlDbContext _context;
 
-    public User? GetUserByEmail(string email)
+    public UserRepository(BudgetControlDbContext context)
     {
-        return _users.SingleOrDefault(u => u.Email == email);
+        _context = context;
     }
 
-    public void Add(User user)
+
+    public async Task<User?> GetUserByEmail(string email)
     {
-        _users.Add(user);
+        var user = await _context.Users.SingleOrDefaultAsync(u => u.Email == email);
+        return user;
+        // return  _context.Users.SingleOrDefault(u => u.Email == email);
+    }
+
+    public async Task Add(User user)
+    {
+        await _context.Users.AddAsync(user);
+        await _context.SaveChangesAsync();
     }
 
     public void Update(User user)
     {
-        var index = _users.FindIndex(u => u.Id == user.Id);
-        if (index > -1) _users[index] = user;
+        var userToUpdate = _context.Users.Find(user.Id);
+        if (userToUpdate is not null)
+        {
+            userToUpdate.Update(user);
+            _context.Update(userToUpdate);
+            _context.SaveChanges();
+        }
     }
 
     public User? Get(string id)
     {
-        return _users.SingleOrDefault(u => u.Id.ToString() == id);
+        return _context.Users.SingleOrDefault(u => u.Id.ToString() == id);
     }
 }
