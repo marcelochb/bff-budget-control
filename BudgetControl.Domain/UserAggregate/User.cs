@@ -5,20 +5,20 @@ namespace BudgetControl.Domain.UserAggregate;
 
 public sealed class User : AggregateRoot<Guid>
 {
-    public string Name { get; }
-    public string Email { get; }
-    public string Password { get; }
-    public string Status { get; }
+    public string Name { get; private set;}
+    public string Email { get;private set; }
+    public string Password { get;private set; }
+    public string Status { get;private set; }
 
-    public UserConfig? Config { get; set; }
+    public UserConfig? Config { get; private set; }
 
     private User(
-        Guid userId,
+        Guid Id,
         string name,
         string email,
         string password,
         string status
-    ) : base(userId)
+    ) : base(Id)
     {
         Name = name;
         Email = email;
@@ -30,10 +30,29 @@ public sealed class User : AggregateRoot<Guid>
         string name,
         string email,
         string password,
-        string status
+        string status,
+        UserConfig? config = null
     )
     {
-        return new(Guid.NewGuid(), name, email, password, status);
+        var user = new User(
+            Guid.NewGuid(),
+            name,
+            email,
+            password,
+            status
+        );
+        if (config is not null) user.UpdateConfig(config);
+        return user;
+    }
+    public void Update(User? user)
+    {
+        if (user is not null)
+        {
+            Name = user.Name;
+            Email = user.Email;
+            Password = user.Password;
+            Status = user.Status;
+        }
     }
 
     public  void UpdateConfig(UserConfig config)

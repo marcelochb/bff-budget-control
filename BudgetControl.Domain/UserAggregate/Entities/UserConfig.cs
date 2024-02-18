@@ -6,9 +6,9 @@ public sealed class UserConfig : Entity<Guid>
 {
     public Guid LedgerId { get; }
     private UserConfig(
-        Guid userConfigId,
+        Guid Id,
         Guid ledgerId)
-        : base(userConfigId)
+        : base(Id)
     {
         LedgerId = ledgerId;
     }

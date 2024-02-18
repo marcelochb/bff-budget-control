@@ -3,7 +3,7 @@ namespace BudgetControl.Domain.Common.Models;
 public abstract class Entity<TId> : IEquatable<Entity<TId>>
     where TId: notnull 
 {
-    public TId Id { get; protected set; }
+    public TId Id { get; private set; }
     protected Entity(TId id)
     {
         Id = id;
