@@ -17,7 +17,7 @@ public class LedgerGetQueryHandler : IRequestHandler<LedgerGetQuery, ErrorOr<Led
 
     public async Task<ErrorOr<LedgerResult>> Handle(LedgerGetQuery query, CancellationToken cancellationToken)
     {
-        var ledger = _ledgerRepository.GetById(query.Id);
+        var ledger = await _ledgerRepository.GetById(query.Id);
         if (ledger is null)
         {
             return Errors.Ledger.NotFound;
