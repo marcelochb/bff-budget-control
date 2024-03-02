@@ -10,5 +10,6 @@ public class LedgerCategoryCreateUpdateCommandValidator : AbstractValidator<Cate
         RuleFor(x => x.Name).NotEmpty();
         RuleFor(x => x.Goal).NotEmpty();
         RuleFor(x => x.Color).NotEmpty();
+        RuleFor(x => x.LedgerId).NotEmpty();
     }
 }

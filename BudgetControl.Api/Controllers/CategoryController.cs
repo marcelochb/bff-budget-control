@@ -46,9 +46,7 @@ public class CategoryController: ApiController
     [HttpPost]
     public async Task<IActionResult> CreateCategory([FromBody] CategoryRequest request)
     {
-        var command = _mapper.Map<CategoryCreateCommand>(request with { 
-            LedgerId = (string?)HttpContext.User.Claims.First(x => x.Type == "ledgerId").Value  
-        });
+        var command = _mapper.Map<CategoryCreateCommand>(request);
         ErrorOr<CategoryResult> category = await _mediator.Send(command);
         return category.Match(
             category => Ok(_mapper.Map<CategoryResponse>(category)),

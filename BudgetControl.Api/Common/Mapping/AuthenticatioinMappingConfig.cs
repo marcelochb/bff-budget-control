@@ -15,8 +15,8 @@ public class AuthenticationMappingConfig : IRegister
 
         // config.NewConfig<User, UserResponse>()
         // .Map(dest => dest.Config, src => src.Config);
-        // config.NewConfig<UserConfig, UserConfigResponse>()
-        // .Map(dest => dest.LedgerId, src => src.LedgerId.Value);
+        config.NewConfig<UserConfig, UserConfigResponse>()
+        .Map(dest => dest.LedgerId, src => src.LedgerId.ToString());
         // config.NewConfig<Ledger, LedgerResponse>()
         // .Map(dest => dest.Id, src => src.Id.Value);
         // config.NewConfig<LedgerCategory, CategoryResponse>()
