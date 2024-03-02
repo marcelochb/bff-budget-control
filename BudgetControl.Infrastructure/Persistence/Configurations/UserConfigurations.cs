@@ -28,9 +28,5 @@ public class UserConfigurations : IEntityTypeConfiguration<User>
     private static void UserCollectionConfiguration(EntityTypeBuilder<User> builder)
     {
         builder.ToCollection("users");
-        builder.HasKey(e => e.Id);
-        builder.Property(e => e.Id)
-            .HasElementName("_id")
-            .ValueGeneratedNever();
     }
 }

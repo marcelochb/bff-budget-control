@@ -45,10 +45,10 @@ public class LedgerConfigurations : IEntityTypeConfiguration<Ledger>
     private void ConfigurationLedgerCollection(EntityTypeBuilder<Ledger> builder)
     {
         builder.ToCollection("ledgers");
-        builder.HasKey(e => e.Id);
-        builder.Property(e => e.Id)
-            .HasElementName("_id")
-            .ValueGeneratedNever();
-        builder.Ignore(e => e.User);
+        // builder.HasKey(e => e.Id);
+        // builder.Property(e => e.Id)
+            // .HasElementName("_id")
+            // .ValueGeneratedNever();
+        // builder.Ignore(e => e.User);
     }
 }
