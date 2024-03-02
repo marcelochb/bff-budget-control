@@ -1,6 +1,8 @@
+using BudgetControl.Domain.LedgerAggregate;
 using BudgetControl.Domain.LedgerAggregate.Entities;
 using BudgetControl.Interfaces.Persistence.Categories;
 using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
 
 namespace BudgetControl.Infrastructure.Persistence.Repositories;
 
@@ -29,9 +31,14 @@ public class CategoryRepository : ICategoryRepository<LedgerCategory>
 
     public async Task Add(string ledgerId, LedgerCategory category)
     {
-        var ledger = await _context.Ledgers.SingleOrDefaultAsync(c => c.Id.ToString() == ledgerId);
-        ledger?.Categories.Add(category);
-        await _context.SaveChangesAsync();
+        var ledger = await _context.Ledgers.FindAsync(Builders<Ledger>.Filter.Eq(ledger => ledger.Id.ToString(), ledgerId));
+        if (ledger is not null)
+        {
+            ledger?.Categories.Add(category);
+            _context.Update<Ledger>(ledger);
+            await _context.SaveChangesAsync();
+        }
+        return;
     }
 
     public async Task Update(string ledgerId, LedgerCategory category)

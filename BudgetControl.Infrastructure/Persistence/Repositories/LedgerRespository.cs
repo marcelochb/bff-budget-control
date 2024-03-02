@@ -1,6 +1,7 @@
 using BudgetControl.Domain.LedgerAggregate;
 using BudgetControl.Interfaces.Persistence.Ledgers;
 using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 
 namespace BudgetControl.Infrastructure.Persistence.Repositories;
@@ -22,12 +23,20 @@ public class LedgerRepository : ILedgerRepository<Ledger>
 
     public async Task<Ledger?> GetById(string id)
     {
-        return await _context.Ledgers.SingleOrDefaultAsync(element => element.Id.ToString() == id);
+        // var query = Query.Equals(e.Id, id);
+        // var ledgers = _context.Ledgers.
+        var ledgers = await _context.Ledgers.FindAsync(Builders<Ledger>.Filter.Eq("Id", Guid.Parse(id)));
+        // var ledgers = await _context.Ledgers.FirstOrDefaultAsync(element => element.Id.ToString().Split(",")[1] == id);
+        // var query =  (from ledger in  _context.Ledgers.AsEnumerable()
+        //             where ledger.Id.ToString() == id
+        //             select ledger);
+        return ledgers;
     }
 
     public async Task<bool> GetByName(string name)
     {
-        return await _context.Ledgers.AnyAsync(element => element.Name == name);
+        var ledger = await _context.Ledgers.AnyAsync(element => element.Name == name);
+        return ledger;
     }
 
     public List<Ledger> GetLedgersByUserId(string userId)

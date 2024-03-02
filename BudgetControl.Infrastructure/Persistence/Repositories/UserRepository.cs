@@ -18,7 +18,6 @@ public class UserRepository : IUserRepository<User>
     {
         var user = await _context.Users.SingleOrDefaultAsync(u => u.Email == email);
         return user;
-        // return  _context.Users.SingleOrDefault(u => u.Email == email);
     }
 
     public async Task Add(User user)
