@@ -1,6 +1,5 @@
 using BudgetControl.Domain.Common.Models;
 using BudgetControl.Domain.LedgerAggregate.Entities;
-using BudgetControl.Domain.UserAggregate;
 
 namespace BudgetControl.Domain.LedgerAggregate;
 
@@ -37,6 +36,11 @@ public sealed class Ledger : AggregateRoot<Guid>
     public void AddCategories(List<LedgerCategory> categories)
     {
         _categories.AddRange(categories);
+    }
+
+    public void AddCategory(LedgerCategory category)
+    {
+        _categories.Add(category);
     }
 
     public void RemoveCategory(LedgerCategory category)
