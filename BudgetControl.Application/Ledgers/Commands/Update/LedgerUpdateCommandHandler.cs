@@ -19,8 +19,7 @@ public class LedgerUpdateCommandHandler : IRequestHandler<LedgerUpdateCommand, E
 
     public async Task<ErrorOr<LedgerUpdateResult>> Handle(LedgerUpdateCommand command, CancellationToken cancellationToken)
     {
-        await Task.CompletedTask;
-        var ledger = await _ledgerRepository.GetById(command.Id);
+        var ledger =  await _ledgerRepository.GetById(command.Id);
         if (ledger is null)
         {
             return Errors.Ledger.NotFound;

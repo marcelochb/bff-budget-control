@@ -17,6 +17,7 @@ public class LedgerListQueryHandler : IRequestHandler<LedgerListQuery, ErrorOr<L
 
     public async Task<ErrorOr<LedgerListResult>> Handle(LedgerListQuery query, CancellationToken cancellationToken)
     {
+      await Task.CompletedTask;
       var ledgers = _ledgerRepository.GetLedgersByUserId(query.UserId);
       return new LedgerListResult(ledgers);
     }
