@@ -1,5 +1,6 @@
 using BudgetControl.Domain.Common.Models;
 using BudgetControl.Domain.UserAggregate.Entities;
+using BudgetControl.Domain.UserAggregate.Events;
 
 namespace BudgetControl.Domain.UserAggregate;
 
@@ -42,6 +43,7 @@ public sealed class User : AggregateRoot<Guid>
             status
         );
         if (config is not null) user.UpdateConfig(config);
+        user.AddDomainEvent(new UserCreated(user));
         return user;
     }
     public void Update(User? user)
