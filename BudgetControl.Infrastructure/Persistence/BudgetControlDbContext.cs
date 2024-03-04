@@ -1,20 +1,32 @@
+using BudgetControl.Domain.Common.Models;
 using BudgetControl.Domain.LedgerAggregate;
 using BudgetControl.Domain.UserAggregate;
+using BudgetControl.Infrastructure.Persistence.Interceptors;
 using Microsoft.EntityFrameworkCore;
 
 namespace BudgetControl.Infrastructure.Persistence;
 
 public class BudgetControlDbContext : DbContext
 {
-    public BudgetControlDbContext(DbContextOptions<BudgetControlDbContext> options) : base(options)
+    private readonly PublishDomainEventsInterceptors _publishDomainEventsInterceptors;
+    public BudgetControlDbContext(DbContextOptions<BudgetControlDbContext> options, 
+                        PublishDomainEventsInterceptors publishDomainEventsInterceptors) : base(options)
     {
+        _publishDomainEventsInterceptors = publishDomainEventsInterceptors;
     }
     public DbSet<User> Users { get; init; }
     public DbSet<Ledger> Ledgers { get; init; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(BudgetControlDbContext).Assembly);
+        modelBuilder
+            .Ignore<List<IDomainEvent>>()
+            .ApplyConfigurationsFromAssembly(typeof(BudgetControlDbContext).Assembly);
         base.OnModelCreating(modelBuilder);
+    }
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.AddInterceptors(_publishDomainEventsInterceptors);
+        base.OnConfiguring(optionsBuilder);
     }
 }

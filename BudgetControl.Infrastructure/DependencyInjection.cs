@@ -16,6 +16,7 @@ using BudgetControl.Domain.LedgerAggregate.Entities;
 using Microsoft.EntityFrameworkCore;
 using BudgetControl.Infrastructure.Persistence.Repositories;
 using MongoDB.Driver;
+using BudgetControl.Infrastructure.Persistence.Interceptors;
 
 namespace BudgetControl.Infrastructure;
 
@@ -39,6 +40,8 @@ public static class DependencyInjection
         {
             options.UseMongoDB(mongodb.Client,mongodb.DatabaseNamespace.DatabaseName);
         });
+
+        services.AddScoped<PublishDomainEventsInterceptors>();
         services.AddScoped<IUserRepository<User>, UserRepository>();
         services.AddScoped<ILedgerRepository<Ledger>, LedgerRepository>();
         services.AddScoped<ICategoryRepository<LedgerCategory>, CategoryRepository>();
