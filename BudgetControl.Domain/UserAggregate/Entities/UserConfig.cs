@@ -4,7 +4,7 @@ namespace BudgetControl.Domain.UserAggregate.Entities;
 
 public sealed class UserConfig : Entity<Guid>
 {
-    public Guid LedgerId { get; }
+    public Guid LedgerId { get; set;}
     private UserConfig(
         Guid Id,
         Guid ledgerId)

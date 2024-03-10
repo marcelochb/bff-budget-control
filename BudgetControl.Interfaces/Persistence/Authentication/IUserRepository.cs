@@ -4,7 +4,7 @@ public interface IUserRepository<T>
 {
     Task<T?> GetUserByEmail(string email);
     Task Add(T user);
-    void Update(T user);
+    Task Update(T user);
     T? Get(string id);
 
 }

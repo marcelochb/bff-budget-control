@@ -29,14 +29,14 @@ public class LedgersController : ApiController
   public async Task<IActionResult> ListLedgers()
   {
     var userId = HttpContext.User.Claims.First(x => x.Type == "jti").Value;
-    ErrorOr<LedgerListResult> ledgerListResult = await _mediator.Send(new LedgerListQuery(userId));
+    ErrorOr<LedgerListResult> ledgerListResult = await _mediator.Send(new LedgerListQuery(Guid.Parse(userId)));
     return ledgerListResult.Match(
       ledgerListResult => Ok(_mapper.Map<LedgerListResponse>(ledgerListResult)),
       errors => Problem(errors)
     );
   }
   [HttpGet("{id}")]
-  public async Task<IActionResult> GetLedger(string id)
+  public async Task<IActionResult> GetLedger(Guid id)
   {
     ErrorOr<LedgerResult> ledger = await _mediator.Send(new LedgerGetQuery(id));
     return ledger.Match(

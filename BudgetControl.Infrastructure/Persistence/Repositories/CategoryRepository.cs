@@ -2,6 +2,9 @@ using BudgetControl.Domain.LedgerAggregate;
 using BudgetControl.Domain.LedgerAggregate.Entities;
 using BudgetControl.Interfaces.Persistence.Categories;
 using Microsoft.EntityFrameworkCore;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 
 namespace BudgetControl.Infrastructure.Persistence.Repositories;
@@ -15,36 +18,38 @@ public class CategoryRepository : ICategoryRepository<LedgerCategory>
         _context = context;
     }
 
-    public async Task<LedgerCategory?> GetById(string ledgerId, string id)
+    public async Task<LedgerCategory?> GetById(Guid ledgerId, Guid id)
     {
-        var ledger = await _context.Ledgers.SingleOrDefaultAsync(c => c.Id.ToString() == ledgerId);
-        return ledger?.Categories.SingleOrDefault(c => c.Id.ToString() == id);
+        var ledger = await _context.Ledgers.SingleOrDefaultAsync(c => c.Id == ledgerId);
+        return ledger?.Categories.SingleOrDefault(c => c.Id == id);
     }
 
-    public async Task<bool> GetByName(string ledgerId, string name)
+    public async Task<bool> GetByName(Guid ledgerId, string name)
     {
         var ledgers = await _context.Ledgers
             .Include(c => c.Categories)
-            .SingleOrDefaultAsync(c => c.Id.ToString() == ledgerId);
+            .SingleOrDefaultAsync(c => c.Id == ledgerId);
         return ledgers?.Categories.Any(c => c.Name == name) ?? false;
     }
 
-    public async Task Add(string ledgerId, LedgerCategory category)
+    public async Task Add(Guid ledgerId, LedgerCategory category)
     {
-        var ledger = await _context.Ledgers.FindAsync(Builders<Ledger>.Filter.Eq(ledger => ledger.Id.ToString(), ledgerId));
+        var guidSerializer = new GuidSerializer(GuidRepresentation.Standard);
+        BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
+        var ledger = await _context.Ledgers.FindAsync(ledgerId);
         if (ledger is not null)
         {
-            ledger?.Categories.Add(category);
-            _context.Update<Ledger>(ledger);
+            ledger.Categories.Add(category);
+            _context.Update(ledger);
             await _context.SaveChangesAsync();
         }
         return;
     }
 
-    public async Task Update(string ledgerId, LedgerCategory category)
+    public async Task Update(Guid ledgerId, LedgerCategory category)
     {
-        var ledger = await _context.Ledgers.SingleOrDefaultAsync(c => c.Id.ToString() == ledgerId);
-        var categoryToUpdate = ledger?.Categories.SingleOrDefault(c => c.Id.ToString() == category.Id.ToString());
+        var ledger = await _context.Ledgers.SingleOrDefaultAsync(c => c.Id == ledgerId);
+        var categoryToUpdate = ledger?.Categories.SingleOrDefault(c => c.Id == category.Id);
         if (categoryToUpdate is not null)
         {
             categoryToUpdate.Update(category);
@@ -52,18 +57,18 @@ public class CategoryRepository : ICategoryRepository<LedgerCategory>
         }
     }
 
-    public async Task Remove(string ledgerId, string id)
+    public async Task Remove(Guid ledgerId, Guid id)
     {
-        var ledger = await _context.Ledgers.SingleOrDefaultAsync(c => c.Id.ToString() == ledgerId);
-        ledger?.Categories.Remove(ledger.Categories.Single(c => c.Id.ToString() == id));
+        var ledger = await _context.Ledgers.SingleOrDefaultAsync(c => c.Id == ledgerId);
+        ledger?.Categories.Remove(ledger.Categories.Single(c => c.Id == id));
         await _context.SaveChangesAsync();
     }
 
-    public async Task<List<LedgerCategory>> GetList(string ledgerId)
+    public async Task<List<LedgerCategory>> GetList(Guid ledgerId)
     {
         var ledger = await _context.Ledgers
             .Include(c => c.Categories)
-            .SingleOrDefaultAsync(c => c.Id.ToString() == ledgerId);
+            .SingleOrDefaultAsync(c => c.Id == ledgerId);
         return ledger?.Categories ?? new List<LedgerCategory>();
     }
 }

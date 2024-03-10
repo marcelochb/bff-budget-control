@@ -20,15 +20,12 @@ public class CategoryCreateCommandHandler : IRequestHandler<CategoryCreateComman
 
     public async Task<ErrorOr<CategoryResult>> Handle(CategoryCreateCommand command, CancellationToken cancellationToken)
     {
-        if (command.LedgerId is null) {
-            return Errors.Ledger.NotFound;
-        }
         var ledger = await _ledgerRepository.GetById(command.LedgerId);
         if (ledger is null)
         {
             return Errors.Ledger.NotFound;
         }
-        var category = LedgerCategory.Create(command.Name, command.Goal, command.Color);
+        var category = LedgerCategory.Create(command.Name, command.Goal, command.Color, ledger.Id);
         ledger.AddCategory(category);
         await _ledgerRepository.Update(ledger);
         return new CategoryResult(category.Name, category.Goal, category.Color);

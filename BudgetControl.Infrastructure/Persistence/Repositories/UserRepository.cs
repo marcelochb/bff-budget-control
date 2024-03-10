@@ -26,14 +26,14 @@ public class UserRepository : IUserRepository<User>
         await _context.SaveChangesAsync();
     }
 
-    public void Update(User user)
+    public async Task Update(User user)
     {
-        var userToUpdate = _context.Users.Find(user.Id);
+        var userToUpdate = await _context.Users.FindAsync(user.Id);
         if (userToUpdate is not null)
         {
             userToUpdate.Update(user);
             _context.Update(userToUpdate);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 

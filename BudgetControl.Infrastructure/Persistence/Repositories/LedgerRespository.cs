@@ -3,6 +3,11 @@ using BudgetControl.Interfaces.Persistence.Ledgers;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
+using MongoDB.Bson;
+using BudgetControl.Domain;
+using System.Linq;
+using MongoDB.Bson.Serialization.Serializers;
+using MongoDB.Bson.Serialization;
 
 namespace BudgetControl.Infrastructure.Persistence.Repositories;
 
@@ -17,20 +22,20 @@ public class LedgerRepository : ILedgerRepository<Ledger>
 
     public async Task Add(Ledger ledger)
     {
+
         await _context.AddAsync(ledger);
+
         await _context.SaveChangesAsync();
+
     }
 
-    public async Task<Ledger?> GetById(string id)
+    public async Task<Ledger?> GetById(Guid id)
     {
-        // var query = Query.Equals(e.Id, id);
-        // var ledgers = _context.Ledgers.
-        var ledgers = await _context.Ledgers.FindAsync(Builders<Ledger>.Filter.Eq("Id", Guid.Parse(id)));
-        // var ledgers = await _context.Ledgers.FirstOrDefaultAsync(element => element.Id.ToString().Split(",")[1] == id);
-        // var query =  (from ledger in  _context.Ledgers.AsEnumerable()
-        //             where ledger.Id.ToString() == id
-        //             select ledger);
-        return ledgers;
+
+        var result = _context.Ledgers.Find(id);
+
+
+        return result;
     }
 
     public async Task<bool> GetByName(string name)
@@ -39,12 +44,12 @@ public class LedgerRepository : ILedgerRepository<Ledger>
         return ledger;
     }
 
-    public List<Ledger> GetLedgersByUserId(string userId)
+    public List<Ledger> GetLedgersByUserId(Guid userId)
     {
-        return _context.Ledgers.Where(element => element.User.Id.ToString() == userId).ToList();
+        return _context.Ledgers.Where(element => element.User.Id == userId).ToList();
     }
 
-    public async Task Remove(string id)
+    public async Task Remove(Guid id)
     {
         var ledger = await _context.Ledgers.FindAsync(id);
         if (ledger is not null)

@@ -4,4 +4,4 @@ using MediatR;
 
 namespace BudgetControl.Application.Ledgers.Queries.List;
 
-public record LedgerListQuery(string UserId) : IRequest<ErrorOr<LedgerListResult>>;
+public record LedgerListQuery(Guid UserId) : IRequest<ErrorOr<LedgerListResult>>;

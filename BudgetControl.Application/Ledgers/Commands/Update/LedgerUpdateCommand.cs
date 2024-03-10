@@ -4,7 +4,7 @@ using MediatR;
 
 namespace BudgetControl.Application.Ledgers.Commands.Update;
 
-public record LedgerUpdateCommand(string Id,
+public record LedgerUpdateCommand(Guid Id,
                                   string Name,
                                   string Type,
-                                  string UserId) : IRequest<ErrorOr<LedgerUpdateResult>>;
+                                  Guid UserId) : IRequest<ErrorOr<LedgerUpdateResult>>;

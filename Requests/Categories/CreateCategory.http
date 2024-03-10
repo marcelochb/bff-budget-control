@@ -1,5 +1,5 @@
 @host=http://localhost:5202
-@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJnaXZlbl9uYW1lIjoiSm9obiIsImVtYWlsIjoibWFyY2Vsb2NoYkBnbWFpbC5jb20iLCJqdGkiOiI2NWRmZThkZTBkNDYwNDY4MjFjZTU0NmEiLCJsZWRnZXJJZCI6IjY1ZGZlOGRlMGQ0NjA0NjgyMWNlNTQ4MyIsImV4cCI6MTcwOTI2MDg1MSwiaXNzIjoiQnVkZ2V0Q29udHJvbCIsImF1ZCI6IkJ1ZGdldENvbnRyb2wifQ.Ck9LhiBJ3kBzO5MKHqp-oqZ1si52p02xOq4F2QQp7B4
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJnaXZlbl9uYW1lIjoiSm9obiIsImVtYWlsIjoibWFyY2Vsb2NoYkBnbWFpbC5jb20iLCJqdGkiOiI0NWIxMDllMy1lNjU0LTRmYzQtYjRmYi0yMDMxYjFmNDc0ZjciLCJsZWRnZXJJZCI6IjgxYjlkNWZjLTg3YjgtNGViZC1iYzcxLWJlMzdiOTdhZDkzMSIsImV4cCI6MTcwOTU4MjAxMiwiaXNzIjoiQnVkZ2V0Q29udHJvbCIsImF1ZCI6IkJ1ZGdldENvbnRyb2wifQ.OiwUviu4bZuWcVmnjiXyF1yRJLSSCYGriBr_pGGTfac
 POST {{host}}/category
 Authorization: Bearer {{token}}
 Content-Type: application/json
@@ -8,5 +8,5 @@ Content-Type: application/json
     "name": "Test category",
     "goal": 100,
     "color": "FF0000",
-    "ledgerId": "65dfe8de0d46046821ce5483"
+    "ledgerId": "81b9d5fc-87b8-4ebd-bc71-be37b97ad931"
   }
