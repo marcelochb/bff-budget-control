@@ -1,26 +1,28 @@
 using BudgetControl.Domain.Common.Models;
 using BudgetControl.Domain.LedgerAggregate.Entities;
+using BudgetControl.Domain.LedgerAggregate.ValueObjects;
+using BudgetControl.Domain.UserAggregate;
 
 namespace BudgetControl.Domain.LedgerAggregate;
 
-public sealed class Ledger : AggregateRoot<Guid>
+public sealed class Ledger : AggregateRoot<LedgerId>
 {
     public string Name { get; private set; }
     public string Type { get; private set; }
-    public LedgerUser? User { get; private set;}
+    public User? User { get; private set;}
     private readonly List<LedgerCategory> _categories = new();
 
     public List<LedgerCategory> Categories => _categories.ToList();
 
-    private Ledger(Guid Id, string name, string type) : base(Id)
+    private Ledger(LedgerId Id, string name, string type) : base(Id)
     {
         Name = name;
         Type = type;
     }
 
-    public static Ledger Create(string name, string type, LedgerUser? user = null, List<LedgerCategory>? categories = null)
+    public static Ledger Create(string name, string type, User? user = null, List<LedgerCategory>? categories = null)
     {
-        var ledger = new Ledger(Guid.NewGuid(),
+        var ledger = new Ledger(LedgerId.CreateUnique(),
                                 name,
                                 type);
         if (categories is not null) ledger.AddCategories(categories);
@@ -48,7 +50,7 @@ public sealed class Ledger : AggregateRoot<Guid>
         _categories.Remove(category);
     }
 
-    public void AddUser(LedgerUser user)
+    public void AddUser(User user)
     {
         User = user;
     }
