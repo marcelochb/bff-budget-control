@@ -24,7 +24,7 @@ public class UserCreatedEventHandler : INotificationHandler<UserCreated>
     {
        var ledger = Ledger.Create(name: "Default",
                                    type: "Expense",
-                                   user: LedgerUser.Create(notification.User.Id, notification.User.Name));        
+                                   user: notification.User);        
         
         var habitatCategory = LedgerCategory.Create(name: "Habitação",
                                                     goal: 0,
