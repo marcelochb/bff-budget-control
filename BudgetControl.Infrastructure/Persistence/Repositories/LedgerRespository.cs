@@ -46,7 +46,7 @@ public class LedgerRepository : ILedgerRepository<Ledger>
 
     public List<Ledger> GetLedgersByUserId(Guid userId)
     {
-        return _context.Ledgers.Where(element => element.User.Id == userId).ToList();
+        return _context.Ledgers.Where(element => element.User.Id.Value == userId).ToList();
     }
 
     public async Task Remove(Guid id)

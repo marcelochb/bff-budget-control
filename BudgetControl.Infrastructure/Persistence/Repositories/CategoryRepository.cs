@@ -20,15 +20,15 @@ public class CategoryRepository : ICategoryRepository<LedgerCategory>
 
     public async Task<LedgerCategory?> GetById(Guid ledgerId, Guid id)
     {
-        var ledger = await _context.Ledgers.SingleOrDefaultAsync(c => c.Id == ledgerId);
-        return ledger?.Categories.SingleOrDefault(c => c.Id == id);
+        var ledger = await _context.Ledgers.SingleOrDefaultAsync(c => c.Id.Value == ledgerId);
+        return ledger?.Categories.SingleOrDefault(c => c.Id.Value == id);
     }
 
     public async Task<bool> GetByName(Guid ledgerId, string name)
     {
         var ledgers = await _context.Ledgers
             .Include(c => c.Categories)
-            .SingleOrDefaultAsync(c => c.Id == ledgerId);
+            .SingleOrDefaultAsync(c => c.Id.Value == ledgerId);
         return ledgers?.Categories.Any(c => c.Name == name) ?? false;
     }
 
@@ -48,7 +48,7 @@ public class CategoryRepository : ICategoryRepository<LedgerCategory>
 
     public async Task Update(Guid ledgerId, LedgerCategory category)
     {
-        var ledger = await _context.Ledgers.SingleOrDefaultAsync(c => c.Id == ledgerId);
+        var ledger = await _context.Ledgers.SingleOrDefaultAsync(c => c.Id.Value == ledgerId);
         var categoryToUpdate = ledger?.Categories.SingleOrDefault(c => c.Id == category.Id);
         if (categoryToUpdate is not null)
         {
@@ -59,8 +59,8 @@ public class CategoryRepository : ICategoryRepository<LedgerCategory>
 
     public async Task Remove(Guid ledgerId, Guid id)
     {
-        var ledger = await _context.Ledgers.SingleOrDefaultAsync(c => c.Id == ledgerId);
-        ledger?.Categories.Remove(ledger.Categories.Single(c => c.Id == id));
+        var ledger = await _context.Ledgers.SingleOrDefaultAsync(c => c.Id.Value == ledgerId);
+        ledger?.Categories.Remove(ledger.Categories.Single(c => c.Id.Value == id));
         await _context.SaveChangesAsync();
     }
 
@@ -68,7 +68,7 @@ public class CategoryRepository : ICategoryRepository<LedgerCategory>
     {
         var ledger = await _context.Ledgers
             .Include(c => c.Categories)
-            .SingleOrDefaultAsync(c => c.Id == ledgerId);
+            .SingleOrDefaultAsync(c => c.Id.Value == ledgerId);
         return ledger?.Categories ?? new List<LedgerCategory>();
     }
 }
