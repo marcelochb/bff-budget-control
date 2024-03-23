@@ -1,13 +1,7 @@
 using BudgetControl.Domain.LedgerAggregate;
 using BudgetControl.Interfaces.Persistence.Ledgers;
 using Microsoft.EntityFrameworkCore;
-using MongoDB.Driver;
-using MongoDB.Driver.Linq;
-using MongoDB.Bson;
-using BudgetControl.Domain;
-using System.Linq;
-using MongoDB.Bson.Serialization.Serializers;
-using MongoDB.Bson.Serialization;
+
 
 namespace BudgetControl.Infrastructure.Persistence.Repositories;
 
@@ -46,7 +40,7 @@ public class LedgerRepository : ILedgerRepository<Ledger>
 
     public List<Ledger> GetLedgersByUserId(Guid userId)
     {
-        return _context.Ledgers.Where(element => element.User.Id.Value == userId).ToList();
+        return _context.Ledgers.Where(element => element.UserId.Value == userId.ToString()).ToList();
     }
 
     public async Task Remove(Guid id)

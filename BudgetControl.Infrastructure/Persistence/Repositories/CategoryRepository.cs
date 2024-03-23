@@ -2,10 +2,7 @@ using BudgetControl.Domain.LedgerAggregate;
 using BudgetControl.Domain.LedgerAggregate.Entities;
 using BudgetControl.Interfaces.Persistence.Categories;
 using Microsoft.EntityFrameworkCore;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
-using MongoDB.Bson.Serialization.Serializers;
-using MongoDB.Driver;
+
 
 namespace BudgetControl.Infrastructure.Persistence.Repositories;
 
@@ -34,15 +31,15 @@ public class CategoryRepository : ICategoryRepository<LedgerCategory>
 
     public async Task Add(Guid ledgerId, LedgerCategory category)
     {
-        var guidSerializer = new GuidSerializer(GuidRepresentation.Standard);
-        BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
-        var ledger = await _context.Ledgers.FindAsync(ledgerId);
-        if (ledger is not null)
-        {
-            ledger.Categories.Add(category);
-            _context.Update(ledger);
-            await _context.SaveChangesAsync();
-        }
+        // var guidSerializer = new GuidSerializer(GuidRepresentation.Standard);
+        // BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
+        // var ledger = await _context.Ledgers.FindAsync(ledgerId);
+        // if (ledger is not null)
+        // {
+        //     ledger.Categories.Add(category);
+        //     _context.Update(ledger);
+        //     await _context.SaveChangesAsync();
+        // }
         return;
     }
 

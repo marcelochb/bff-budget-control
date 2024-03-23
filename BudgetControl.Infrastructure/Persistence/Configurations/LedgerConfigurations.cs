@@ -1,54 +1,42 @@
 using BudgetControl.Domain.LedgerAggregate;
+using BudgetControl.Domain.LedgerAggregate.ValueObjects;
+using BudgetControl.Domain.UserAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using MongoDB.EntityFrameworkCore.Extensions;
-
 namespace BudgetControl.Infrastructure.Persistence.Configurations;
 
 public class LedgerConfigurations : IEntityTypeConfiguration<Ledger>
 {
     public void Configure(EntityTypeBuilder<Ledger> builder)
     {
-        ConfigurationLedgerCollection(builder);
-        ConfigurationCategoryCollection(builder);
-        ConfigurationUserCollection(builder);
+        ConfigureLedgerTable(builder);
     }
-
-    private void ConfigurationUserCollection(EntityTypeBuilder<Ledger> builder)
+    private void ConfigureLedgerTable(EntityTypeBuilder<Ledger> builder)
     {
-        builder.OwnsOne(m => m.User, ub =>
-        {
-            ub.Property(e => e.Id)
-                .HasElementName("_id")
-                .ValueGeneratedNever();
-        });
-    }
+        builder.ToTable("Ledgers");
+        builder.HasKey(e => e.Id);
+        builder.Property(e => e.Id)
+            .ValueGeneratedNever()
+            .HasConversion(
+                id => id.Value,
+                value => LedgerId.Create(value)
+            );
 
-    private void ConfigurationCategoryCollection(EntityTypeBuilder<Ledger> builder)
-    {
-        builder.OwnsMany(m => m.Categories, sb => 
-        {
-            sb.HasKey(e => e.Id);
-            sb.Property(e => e.Id)
-                .HasElementName("_id")
-                .ValueGeneratedNever();
-            sb.OwnsMany(g => g.Groups, gb =>
-            {
-                gb.HasKey(e => e.Id);
-                gb.Property(e => e.Id)
-                    .HasElementName("_id")
-                    .ValueGeneratedNever();
-            });
-        });
-    }
+        builder.HasOne<User>()
+            .WithMany()
+            .HasForeignKey(e => e.UserId)
+            .IsRequired();
 
-    private void ConfigurationLedgerCollection(EntityTypeBuilder<Ledger> builder)
-    {
-        builder.ToCollection("ledgers");
-        // builder.HasKey(e => e.Id);
-        // builder.Property(e => e.Id)
-            // .HasElementName("_id")
-            // .ValueGeneratedNever();
-        // builder.Ignore(e => e.User);
+        builder.HasMany(e => e.Categories)
+            .WithOne()
+            .HasForeignKey(o => o.LedgerId)
+            .IsRequired(false);
+        builder.Property(e => e.Name)
+            .HasMaxLength(100);
+        builder.Property(e => e.Type)
+            .HasMaxLength(100);
+        
+        builder.HasIndex(e => e.Name)
+            .IsUnique();
     }
 }

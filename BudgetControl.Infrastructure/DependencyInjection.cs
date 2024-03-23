@@ -15,7 +15,6 @@ using BudgetControl.Interfaces.Persistence.Categories;
 using BudgetControl.Domain.LedgerAggregate.Entities;
 using Microsoft.EntityFrameworkCore;
 using BudgetControl.Infrastructure.Persistence.Repositories;
-using MongoDB.Driver;
 using BudgetControl.Infrastructure.Persistence.Interceptors;
 
 namespace BudgetControl.Infrastructure;
@@ -35,10 +34,11 @@ public static class DependencyInjection
     public static IServiceCollection AddPersistance(
     this IServiceCollection services)
     {
-        var mongodb = new MongoClient("mongodb://localhost:27017").GetDatabase("BudgetControl");
+        // var mongodb = new MongoClient("mongodb://localhost:27017").GetDatabase("BudgetControl");
         services.AddDbContext<BudgetControlDbContext>(options =>
         {
-            options.UseMongoDB(mongodb.Client,mongodb.DatabaseNamespace.DatabaseName);
+            // options.UseMongoDB(mongodb.Client,mongodb.DatabaseNamespace.DatabaseName);
+            options.UseSqlServer("Server=localhost;Database=BudgetControl;User Id=sa;Password=Password123;");
         });
 
         services.AddScoped<PublishDomainEventsInterceptors>();
