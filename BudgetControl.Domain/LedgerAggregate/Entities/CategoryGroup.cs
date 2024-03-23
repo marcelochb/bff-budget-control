@@ -9,16 +9,27 @@ public sealed class CategoryGroup : Entity<CategoryGroupId>
     public float Goal { get; private set; }
 
     public LedgerCategoryId LedgerCategoryId { get; private set; }
+    public LedgerId LedgerId { get; private set; }
 
-    private CategoryGroup(CategoryGroupId id, string name, float goal, LedgerCategoryId ledgerCategoryId) : base(id)
+    private CategoryGroup(
+        CategoryGroupId id,
+        string name,
+        float goal,
+        LedgerCategoryId ledgerCategoryId,
+        LedgerId ledgerId) : base(id)
     {
         Name = name;
         Goal = goal;
         LedgerCategoryId = ledgerCategoryId;
+        LedgerId = ledgerId;
     }
 
-    public static CategoryGroup Create(string name, float goal, LedgerCategoryId ledgerCategoryId)
+    public static CategoryGroup Create(
+        string name,
+        float goal,
+        LedgerCategoryId ledgerCategoryId,
+        LedgerId ledgerId)
     {
-        return new(CategoryGroupId.CreateUnique(), name, goal, ledgerCategoryId);
+        return new(CategoryGroupId.CreateUnique(), name, goal, ledgerCategoryId, ledgerId);
     }
 }

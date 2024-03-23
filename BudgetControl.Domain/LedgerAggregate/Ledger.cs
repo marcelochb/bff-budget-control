@@ -2,6 +2,7 @@ using BudgetControl.Domain.Common.Models;
 using BudgetControl.Domain.LedgerAggregate.Entities;
 using BudgetControl.Domain.LedgerAggregate.ValueObjects;
 using BudgetControl.Domain.UserAggregate;
+using BudgetControl.Domain.UserAggregate.ValueObjects;
 
 namespace BudgetControl.Domain.LedgerAggregate;
 
@@ -9,24 +10,26 @@ public sealed class Ledger : AggregateRoot<LedgerId>
 {
     public string Name { get; private set; }
     public string Type { get; private set; }
-    public User? User { get; private set;}
+    public UserId UserId { get; private set;}
     private readonly List<LedgerCategory> _categories = new();
+    // private readonly List<UserId> _usersShare = new();
 
     public List<LedgerCategory> Categories => _categories.ToList();
-
-    private Ledger(LedgerId Id, string name, string type) : base(Id)
+    // public List<UserId> UsersShare => _usersShare.ToList();
+    private Ledger(LedgerId Id, string name, string type, UserId userId) : base(Id)
     {
         Name = name;
         Type = type;
+        UserId = userId;
     }
 
-    public static Ledger Create(string name, string type, User? user = null, List<LedgerCategory>? categories = null)
+    public static Ledger Create(string name, string type, UserId userId, List<LedgerCategory>? categories = null)
     {
         var ledger = new Ledger(LedgerId.CreateUnique(),
                                 name,
-                                type);
+                                type,
+                                userId);
         if (categories is not null) ledger.AddCategories(categories);
-        if (user is not null) ledger.AddUser(user);
         return ledger;
     }
 
@@ -50,8 +53,9 @@ public sealed class Ledger : AggregateRoot<LedgerId>
         _categories.Remove(category);
     }
 
-    public void AddUser(User user)
+    #pragma warning disable CS8618
+    private Ledger()
     {
-        User = user;
     }
+    #pragma warning restore CS8618
 }

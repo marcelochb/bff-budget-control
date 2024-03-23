@@ -12,11 +12,11 @@ public sealed class LedgerCategory : Entity<LedgerCategoryId>
     private readonly List<CategoryGroup> _groups = new();
 
     public List<CategoryGroup> Groups => _groups.ToList();
-    private LedgerCategory(LedgerCategoryId id,
+    private LedgerCategory(LedgerCategoryId ledgerCategoryId,
                            string name,
                            float goal,
                            string color,
-                           LedgerId ledgerId) : base(id)
+                           LedgerId ledgerId) : base(ledgerCategoryId)
     {
         Name = name;
         Goal = goal;
@@ -51,4 +51,10 @@ public sealed class LedgerCategory : Entity<LedgerCategoryId>
         _groups.AddRange(groups);
     }
 
+    #pragma warning disable CS8618
+    private LedgerCategory()
+    {
+
+    }
+    #pragma warning restore CS8618
 }

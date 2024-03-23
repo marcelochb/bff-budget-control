@@ -1,5 +1,5 @@
 using BudgetControl.Domain.Common.Models;
-using BudgetControl.Domain.UserAggregate.Entities;
+using BudgetControl.Domain.ConfigAggregate.ValueObjects;
 using BudgetControl.Domain.UserAggregate.Events;
 using BudgetControl.Domain.UserAggregate.ValueObjects;
 
@@ -12,7 +12,8 @@ public sealed class User : AggregateRoot<UserId>
     public string Password { get;private set; }
     public string Status { get;private set; }
 
-    public UserConfig? Config { get; private set; }
+    public ConfigId? ConfigId { get; private set; }
+
 
     private User(
         UserId Id,
@@ -33,7 +34,7 @@ public sealed class User : AggregateRoot<UserId>
         string email,
         string password,
         string status,
-        UserConfig? config = null
+        ConfigId? configId = null
     )
     {
         var user = new User(
@@ -43,7 +44,7 @@ public sealed class User : AggregateRoot<UserId>
             password,
             status
         );
-        if (config is not null) user.UpdateConfig(config);
+        if (configId is not null) user.UpdateConfig(configId);
         user.AddDomainEvent(new UserCreated(user));
         return user;
     }
@@ -58,8 +59,14 @@ public sealed class User : AggregateRoot<UserId>
         }
     }
 
-    public  void UpdateConfig(UserConfig config)
+    public  void UpdateConfig(ConfigId configId)
     {
-        Config = config;
+        ConfigId = configId;
     }
+
+    #pragma warning disable CS8618
+    private User()
+    {
+    }
+    #pragma warning restore CS8618
 }

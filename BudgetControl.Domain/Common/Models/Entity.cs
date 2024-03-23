@@ -45,4 +45,9 @@ public abstract class Entity<TId> : IEquatable<Entity<TId>>, IHasDomainEvents
     {
         _domainEvents.Clear();
     }
+    #pragma warning disable CS8618
+    protected Entity()
+    {
+    }
+    #pragma warning restore CS8618
 }

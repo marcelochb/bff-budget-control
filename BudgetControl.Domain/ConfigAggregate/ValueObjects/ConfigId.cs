@@ -1,21 +1,21 @@
 using BudgetControl.Domain.Common.Models;
 
-namespace BudgetControl.Domain.UserAggregate.ValueObjects;
+namespace BudgetControl.Domain.ConfigAggregate.ValueObjects;
 
-public sealed class UserId : ValueObject
+public sealed class ConfigId : ValueObject
 {
     public string Value { get; }
 
-    private UserId(string value)
+    private ConfigId(string value)
     {
         Value = value;
     }
 
-    public static UserId CreateUnique()
+    public static ConfigId CreateUnique()
     {
         return new(Guid.NewGuid().ToString());
     }
-    public static UserId Create(string value)
+    public static ConfigId Create(string value)
     {
         return new(value);
     }
@@ -24,7 +24,7 @@ public sealed class UserId : ValueObject
         yield return Value;
     }
     #pragma warning disable CS8618
-    private UserId()
+    private ConfigId()
     {
     }
     #pragma warning restore CS8618
