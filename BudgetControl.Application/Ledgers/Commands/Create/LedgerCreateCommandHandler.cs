@@ -36,7 +36,7 @@ public class LedgerCreateCommandHandler : IRequestHandler<LedgerCreateCommand, E
 
         var ledger = Ledger.Create(name: command.Name,
                                    type: command.Type,
-                                   user: user);
+                                   userId: user.Id);
         await _ledgerRepository.Add(ledger);
         return new LedgerResult(ledger.Name, ledger.Type);
     }
