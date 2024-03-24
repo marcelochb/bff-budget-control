@@ -1,5 +1,6 @@
 using BudgetControl.Domain.Common.Models;
 using BudgetControl.Domain.LedgerAggregate.Entities;
+using BudgetControl.Domain.LedgerAggregate.Events;
 using BudgetControl.Domain.LedgerAggregate.ValueObjects;
 using BudgetControl.Domain.UserAggregate;
 using BudgetControl.Domain.UserAggregate.ValueObjects;
@@ -23,13 +24,17 @@ public sealed class Ledger : AggregateRoot<LedgerId>
         UserId = userId;
     }
 
-    public static Ledger Create(string name, string type, UserId userId, List<LedgerCategory>? categories = null)
+    public static Ledger Create(string name, string type, UserId userId, List<LedgerCategory>? categories = null, bool isForNewUser = false, User? user = null)
     {
         var ledger = new Ledger(LedgerId.CreateUnique(),
                                 name,
                                 type,
                                 userId);
+
         if (categories is not null) ledger.AddCategories(categories);
+
+        if (isForNewUser && user is not null) ledger.AddDomainEvent(new LedgerDefaultForNewUser(ledger, user));
+
         return ledger;
     }
 

@@ -4,18 +4,18 @@ namespace BudgetControl.Domain.ConfigAggregate.ValueObjects;
 
 public sealed class ConfigId : ValueObject
 {
-    public string Value { get; }
+    public Guid Value { get; }
 
-    private ConfigId(string value)
+    private ConfigId(Guid value)
     {
         Value = value;
     }
 
     public static ConfigId CreateUnique()
     {
-        return new(Guid.NewGuid().ToString());
+        return new(Guid.NewGuid());
     }
-    public static ConfigId Create(string value)
+    public static ConfigId Create(Guid value)
     {
         return new(value);
     }

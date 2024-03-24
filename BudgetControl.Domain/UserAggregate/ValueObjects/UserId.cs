@@ -4,18 +4,18 @@ namespace BudgetControl.Domain.UserAggregate.ValueObjects;
 
 public sealed class UserId : ValueObject
 {
-    public string Value { get; }
+    public Guid Value { get; }
 
-    private UserId(string value)
+    private UserId(Guid value)
     {
         Value = value;
     }
 
     public static UserId CreateUnique()
     {
-        return new(Guid.NewGuid().ToString());
+        return new(Guid.NewGuid());
     }
-    public static UserId Create(string value)
+    public static UserId Create(Guid value)
     {
         return new(value);
     }
