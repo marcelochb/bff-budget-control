@@ -1,7 +1,7 @@
 using BudgetControl.Application.Ledgers.Contratcts;
 using BudgetControl.Domain.Common.Errors;
 using BudgetControl.Domain.LedgerAggregate;
-using BudgetControl.Interfaces.Persistence.Ledgers;
+using BudgetControl.Interfaces.Persistence;
 using ErrorOr;
 using MediatR;
 
@@ -22,7 +22,7 @@ public class LedgerGetQueryHandler : IRequestHandler<LedgerGetQuery, ErrorOr<Led
         {
             return Errors.Ledger.NotFound;
         }
-        return new LedgerResult(ledger.Name, ledger.Type);
+        return new LedgerResult(ledger.Id.Value,ledger.Name, ledger.Type);
     }
 }
 

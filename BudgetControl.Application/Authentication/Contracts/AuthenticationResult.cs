@@ -1,5 +1,5 @@
-using BudgetControl.Domain.UserAggregate;
+using BudgetControl.Application.Authentication.Contracts;
 
 namespace BudgetControl.Application.Authentication.Common;
 
-public record AuthenticationResult(User User, string Token);
+public record AuthenticationResult(UserResult User, string Token);

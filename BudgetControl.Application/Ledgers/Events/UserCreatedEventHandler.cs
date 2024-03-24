@@ -1,10 +1,9 @@
-using BudgetControl.Domain.ConfigAggregate;
 using BudgetControl.Domain.LedgerAggregate;
 using BudgetControl.Domain.LedgerAggregate.Entities;
 using BudgetControl.Domain.UserAggregate;
 using BudgetControl.Domain.UserAggregate.Events;
+using BudgetControl.Interfaces.Persistence;
 using BudgetControl.Interfaces.Persistence.Authentication;
-using BudgetControl.Interfaces.Persistence.Ledgers;
 using MediatR;
 
 namespace BudgetControl.Application.Ledgers.Events;
@@ -12,19 +11,19 @@ namespace BudgetControl.Application.Ledgers.Events;
 public class UserCreatedEventHandler : INotificationHandler<UserCreated>
 {
     private readonly ILedgerRepository<Ledger> _ledgerRepository;
-    private readonly IUserRepository<User> _userRepository;
 
     public UserCreatedEventHandler(ILedgerRepository<Ledger> ledgerRepository, IUserRepository<User> userRepository)
     {
         _ledgerRepository = ledgerRepository;
-        _userRepository = userRepository;
     }
 
     public async Task Handle(UserCreated notification, CancellationToken cancellationToken)
     {
        var ledger = Ledger.Create(name: "Default",
                                    type: "Expense",
-                                   userId: notification.User.Id);        
+                                   userId: notification.User.Id,
+                                   isForNewUser: true,
+                                   user: notification.User);        
         
         var habitatCategory = LedgerCategory.Create(name: "Habitação",
                                                     goal: 0,
@@ -81,8 +80,5 @@ public class UserCreatedEventHandler : INotificationHandler<UserCreated>
                                 });
         ledger.AddCategories(new List<LedgerCategory> { habitatCategory, transportCategory, foodCategory, healthCategory, leisureCategory });
         await _ledgerRepository.Add(ledger);
-        var config = Config.Create(ledger.Id);
-        notification.User.UpdateConfig(config.Id);
-        await _userRepository.Update(notification.User);
     }
 }

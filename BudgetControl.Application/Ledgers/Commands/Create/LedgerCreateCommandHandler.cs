@@ -1,12 +1,12 @@
 using BudgetControl.Application.Ledgers.Contratcts;
 using BudgetControl.Domain.Common.Errors;
 using BudgetControl.Domain.LedgerAggregate;
-using BudgetControl.Domain.LedgerAggregate.Entities;
 using BudgetControl.Domain.UserAggregate;
 using BudgetControl.Interfaces.Persistence.Authentication;
-using BudgetControl.Interfaces.Persistence.Ledgers;
+using BudgetControl.Interfaces.Persistence;
 using ErrorOr;
 using MediatR;
+using BudgetControl.Domain.UserAggregate.ValueObjects;
 
 namespace BudgetControl.Application.Ledgers.Commands.Create;
 
@@ -28,16 +28,16 @@ public class LedgerCreateCommandHandler : IRequestHandler<LedgerCreateCommand, E
             return Errors.Ledger.DuplicateName;
         }
 
-        var user = _userRepository.Get(command.UserId);
+        var user = await _userRepository.GetById(Guid.Parse(command.UserId));
         if (user is null)
         {
             return Errors.User.NotFound;
-        }
-
+        } 
         var ledger = Ledger.Create(name: command.Name,
                                    type: command.Type,
-                                   userId: user.Id);
+                                   userId:user.Id );
         await _ledgerRepository.Add(ledger);
-        return new LedgerResult(ledger.Name, ledger.Type);
+        return new LedgerResult(ledger.Id.Value,ledger.Name, ledger.Type);
+
     }
 }
