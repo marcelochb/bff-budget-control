@@ -1,5 +1,6 @@
-using BudgetControl.Contracts.Authentication.Response;
-using BudgetControl.Domain.ConfigAggregate;
+using BudgetControl.Contracts.Ledgers.Response;
+using BudgetControl.Domain.LedgerAggregate;
+using BudgetControl.Domain.LedgerAggregate.Entities;
 using Mapster;
 
 namespace BudgetControl.Api.Common.Mapping;
@@ -13,14 +14,15 @@ public class AuthenticationMappingConfig : IRegister
 
         // config.NewConfig<User, UserResponse>()
         // .Map(dest => dest.Config, src => src.Config);
-        config.NewConfig<Config, UserConfigResponse>()
-        .Map(dest => dest.LedgerId, src => src.LedgerId.ToString());
-        // config.NewConfig<Ledger, LedgerResponse>()
-        // .Map(dest => dest.Id, src => src.Id.Value);
-        // config.NewConfig<LedgerCategory, CategoryResponse>()
-        // .Map(dest => dest.Id, src => src.Id.Value);
-        // config.NewConfig<CategoryGroup, CategoryGroupResponse>()
-        // .Map(dest => dest.Id, src => src.Id.Value);
+        // config.NewConfig<ConfigResult, UserConfigResponse>()
+        // .Map(dest => dest.LedgerId, src => src.ledgerId);
+        config.NewConfig<Ledger, LedgerResponse>()
+        .Map(dest => dest.Id, src => src.Id.Value)
+        .Map(dest => dest.UserId, src => src.UserId.Value);
+        config.NewConfig<LedgerCategory, LedgerCategoryResponse>()
+        .Map(dest => dest.Id, src => src.Id.Value);
+        config.NewConfig<CategoryGroup, CategoryGroupResponse>()
+        .Map(dest => dest.Id, src => src.Id.Value);
 
     }
 }
