@@ -39,6 +39,6 @@ public class CategoryConfigurations : IEntityTypeConfiguration<LedgerCategory>
             .IsRequired(false);
 
         builder.HasIndex(e => e.Name)
-            .IsUnique();
+            .IsUnique(false);
     }
 }

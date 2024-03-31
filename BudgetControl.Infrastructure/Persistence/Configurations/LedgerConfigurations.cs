@@ -37,6 +37,6 @@ public class LedgerConfigurations : IEntityTypeConfiguration<Ledger>
             .HasMaxLength(100);
         
         builder.HasIndex(e => e.Name)
-            .IsUnique();
+            .IsUnique(false);
     }
 }

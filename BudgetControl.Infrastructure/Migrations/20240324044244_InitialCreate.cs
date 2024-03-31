@@ -15,7 +15,7 @@ namespace BudgetControl.Infrastructure.Migrations
                 name: "Configs",
                 columns: table => new
                 {
-                    ConfigId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ConfigId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     LedgerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
@@ -27,12 +27,12 @@ namespace BudgetControl.Infrastructure.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Password = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Status = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    ConfigId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    ConfigId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -51,7 +51,7 @@ namespace BudgetControl.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Type = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -112,8 +112,7 @@ namespace BudgetControl.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_CategoryGroups_Name",
                 table: "CategoryGroups",
-                column: "Name",
-                unique: true);
+                column: "Name");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LedgerCategories_LedgerId",
@@ -123,14 +122,12 @@ namespace BudgetControl.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_LedgerCategories_Name",
                 table: "LedgerCategories",
-                column: "Name",
-                unique: true);
+                column: "Name");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Ledgers_Name",
                 table: "Ledgers",
-                column: "Name",
-                unique: true);
+                column: "Name");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Ledgers_UserId",

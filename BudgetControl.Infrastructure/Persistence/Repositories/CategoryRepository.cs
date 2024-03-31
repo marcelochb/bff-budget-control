@@ -1,6 +1,7 @@
 using BudgetControl.Domain.LedgerAggregate;
 using BudgetControl.Domain.LedgerAggregate.Entities;
-using BudgetControl.Interfaces.Persistence.Categories;
+using BudgetControl.Domain.LedgerAggregate.ValueObjects;
+using BudgetControl.Interfaces.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -17,7 +18,10 @@ public class CategoryRepository : ICategoryRepository<LedgerCategory>
 
     public async Task<LedgerCategory?> GetById(Guid ledgerId, Guid id)
     {
-        var ledger = await _context.Ledgers.SingleOrDefaultAsync(c => c.Id.Value == ledgerId);
+        var ledger = await _context.Ledgers
+            .Include(c => c.Categories)
+            .ThenInclude(x => x.Groups)
+            .SingleOrDefaultAsync(c => c.Id.Value == ledgerId);
         return ledger?.Categories.SingleOrDefault(c => c.Id.Value == id);
     }
 
@@ -31,15 +35,13 @@ public class CategoryRepository : ICategoryRepository<LedgerCategory>
 
     public async Task Add(Guid ledgerId, LedgerCategory category)
     {
-        // var guidSerializer = new GuidSerializer(GuidRepresentation.Standard);
-        // BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
-        // var ledger = await _context.Ledgers.FindAsync(ledgerId);
-        // if (ledger is not null)
-        // {
-        //     ledger.Categories.Add(category);
-        //     _context.Update(ledger);
-        //     await _context.SaveChangesAsync();
-        // }
+        var ledger = await _context.Ledgers.FindAsync(LedgerId.Create(ledgerId));
+        if (ledger is not null)
+        {
+            ledger.Categories.Add(category);
+            _context.Update(ledger);
+            await _context.SaveChangesAsync();
+        }
         return;
     }
 

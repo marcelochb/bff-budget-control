@@ -1,5 +1,7 @@
 using BudgetControl.Domain.LedgerAggregate;
-using BudgetControl.Interfaces.Persistence.Ledgers;
+using BudgetControl.Domain.LedgerAggregate.ValueObjects;
+using BudgetControl.Domain.UserAggregate;
+using BudgetControl.Interfaces.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -26,10 +28,13 @@ public class LedgerRepository : ILedgerRepository<Ledger>
     public async Task<Ledger?> GetById(Guid id)
     {
 
-        var result = _context.Ledgers.Find(id);
+        var result = await _context.Ledgers
+                                .Include(element => element.Categories)
+                                .ThenInclude(element => element.Groups)
+                                .ToListAsync();
 
 
-        return result;
+        return result.Where(element => element.Id.Value == id).FirstOrDefault();
     }
 
     public async Task<bool> GetByName(string name)
@@ -38,9 +43,14 @@ public class LedgerRepository : ILedgerRepository<Ledger>
         return ledger;
     }
 
-    public List<Ledger> GetLedgersByUserId(Guid userId)
+    public async Task<List<Ledger>> GetLedgersByUserId(Guid userId)
     {
-        return _context.Ledgers.Where(element => element.UserId.Value == userId.ToString()).ToList();
+        var result = await _context.Ledgers
+                        .Include(element => element.Categories)
+                        .ThenInclude(element => element.Groups)
+                        .ToListAsync();
+
+        return result.Where(element => element.UserId.Value == userId).ToList();
     }
 
     public async Task Remove(Guid id)

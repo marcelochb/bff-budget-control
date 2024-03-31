@@ -31,7 +31,7 @@ public class GroupConfigurations : IEntityTypeConfiguration<CategoryGroup>
             .IsRequired();
         
         builder.HasIndex(e => e.Name)
-            .IsUnique();
+            .IsUnique(false);
 
     }
 }

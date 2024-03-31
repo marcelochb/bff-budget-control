@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BudgetControl.Infrastructure.Migrations
 {
     [DbContext(typeof(BudgetControlDbContext))]
-    [Migration("20240323021846_InitialCreate")]
+    [Migration("20240324044244_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -27,8 +27,8 @@ namespace BudgetControl.Infrastructure.Migrations
 
             modelBuilder.Entity("BudgetControl.Domain.ConfigAggregate.Config", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)")
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("ConfigId");
 
                     b.Property<Guid>("LedgerId")
@@ -62,8 +62,7 @@ namespace BudgetControl.Infrastructure.Migrations
 
                     b.HasKey("Id", "LedgerCategoryId", "LedgerId");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
+                    b.HasIndex("Name");
 
                     b.HasIndex("LedgerCategoryId", "LedgerId");
 
@@ -96,8 +95,7 @@ namespace BudgetControl.Infrastructure.Migrations
 
                     b.HasIndex("LedgerId");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
+                    b.HasIndex("Name");
 
                     b.ToTable("LedgerCategories", (string)null);
                 });
@@ -117,14 +115,12 @@ namespace BudgetControl.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
+                    b.HasIndex("Name");
 
                     b.HasIndex("UserId");
 
@@ -133,12 +129,12 @@ namespace BudgetControl.Infrastructure.Migrations
 
             modelBuilder.Entity("BudgetControl.Domain.UserAggregate.User", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)")
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("UserId");
 
-                    b.Property<string>("ConfigId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid?>("ConfigId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Email")
                         .IsRequired()
