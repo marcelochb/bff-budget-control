@@ -3,16 +3,19 @@ using BudgetControl.Domain.Common.Errors;
 using BudgetControl.Domain.LedgerAggregate;
 using BudgetControl.Interfaces.Persistence;
 using ErrorOr;
+using MapsterMapper;
 using MediatR;
 
 namespace BudgetControl.Application.Ledgers.Queries.Get;
 
 public class LedgerGetQueryHandler : IRequestHandler<LedgerGetQuery, ErrorOr<LedgerResult>>
 {
+    private readonly IMapper _mapper;
     private readonly ILedgerRepository<Ledger> _ledgerRepository;
-    public LedgerGetQueryHandler(ILedgerRepository<Ledger> ledgerRepository)
+    public LedgerGetQueryHandler(ILedgerRepository<Ledger> ledgerRepository, IMapper mapper)
     {
         _ledgerRepository = ledgerRepository;
+        _mapper = mapper;
     }
 
     public async Task<ErrorOr<LedgerResult>> Handle(LedgerGetQuery query, CancellationToken cancellationToken)
@@ -22,7 +25,7 @@ public class LedgerGetQueryHandler : IRequestHandler<LedgerGetQuery, ErrorOr<Led
         {
             return Errors.Ledger.NotFound;
         }
-        return new LedgerResult(ledger.Id.Value,ledger.Name, ledger.Type);
+        return _mapper.Map<LedgerResult>(ledger);
     }
 }
 

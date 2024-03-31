@@ -7,6 +7,7 @@ using BudgetControl.Interfaces.Persistence;
 using ErrorOr;
 using MediatR;
 using BudgetControl.Domain.UserAggregate.ValueObjects;
+using MapsterMapper;
 
 namespace BudgetControl.Application.Ledgers.Commands.Create;
 
@@ -14,11 +15,13 @@ public class LedgerCreateCommandHandler : IRequestHandler<LedgerCreateCommand, E
 {
     private readonly ILedgerRepository<Ledger> _ledgerRepository;
     private readonly IUserRepository<User> _userRepository;
+    private readonly IMapper _mapper;
 
-    public LedgerCreateCommandHandler(ILedgerRepository<Ledger> ledgerRepository, IUserRepository<User> userRepository)
+    public LedgerCreateCommandHandler(ILedgerRepository<Ledger> ledgerRepository, IUserRepository<User> userRepository, IMapper mapper)
     {
         _ledgerRepository = ledgerRepository;
         _userRepository = userRepository;
+        _mapper = mapper;
     }
 
     public async Task<ErrorOr<LedgerResult>> Handle(LedgerCreateCommand command, CancellationToken cancellationToken)
@@ -37,7 +40,7 @@ public class LedgerCreateCommandHandler : IRequestHandler<LedgerCreateCommand, E
                                    type: command.Type,
                                    userId:user.Id );
         await _ledgerRepository.Add(ledger);
-        return new LedgerResult(ledger.Id.Value,ledger.Name, ledger.Type);
+        return _mapper.Map<LedgerResult>(ledger);
 
     }
 }
