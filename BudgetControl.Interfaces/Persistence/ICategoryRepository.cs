@@ -1,4 +1,4 @@
-namespace BudgetControl.Interfaces.Persistence.Categories;
+namespace BudgetControl.Interfaces.Persistence;
 
 public interface ICategoryRepository<T>
 {

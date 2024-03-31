@@ -1,4 +1,4 @@
-namespace BudgetControl.Interfaces.Persistence.Groups;
+namespace BudgetControl.Interfaces.Persistence;
 
 public interface IGroupRepository<T>
 {
