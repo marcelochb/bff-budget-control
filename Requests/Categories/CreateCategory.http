@@ -1,12 +1,12 @@
 @host=http://localhost:5202
-@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJnaXZlbl9uYW1lIjoiSm9obiIsImVtYWlsIjoibWFyY2Vsb2NoYkBnbWFpbC5jb20iLCJqdGkiOiI0NWIxMDllMy1lNjU0LTRmYzQtYjRmYi0yMDMxYjFmNDc0ZjciLCJsZWRnZXJJZCI6IjgxYjlkNWZjLTg3YjgtNGViZC1iYzcxLWJlMzdiOTdhZDkzMSIsImV4cCI6MTcwOTU4MjAxMiwiaXNzIjoiQnVkZ2V0Q29udHJvbCIsImF1ZCI6IkJ1ZGdldENvbnRyb2wifQ.OiwUviu4bZuWcVmnjiXyF1yRJLSSCYGriBr_pGGTfac
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJnaXZlbl9uYW1lIjoiTWFyY2VsbyBCbG9jayBUZWl4ZWlyYSIsImVtYWlsIjoibWFyY2Vsb2NoYkBnbWFpbC5jb20iLCJqdGkiOiJjNmE3MmY4ZC02N2UxLTQzYTMtYjU3Mi1iZjkxMjRkYzFjZTgiLCJleHAiOjE3MTE4MzY2MDEsImlzcyI6IkJ1ZGdldENvbnRyb2wiLCJhdWQiOiJCdWRnZXRDb250cm9sIn0.-gqcDdYhndZEWMP9QuGTsrS_l9qneH0lB7GcfM1jLyQ
 POST {{host}}/category
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
   {
-    "name": "Test category",
+    "name": "Teste nova category",
     "goal": 100,
-    "color": "FF0000",
-    "ledgerId": "81b9d5fc-87b8-4ebd-bc71-be37b97ad931"
+    "color": "#FF0000",
+    "ledgerId": "79d926e4-7d51-41c6-b37c-a19ee5979d0b"
   }

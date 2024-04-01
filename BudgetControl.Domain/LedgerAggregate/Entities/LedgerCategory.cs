@@ -1,21 +1,22 @@
 using BudgetControl.Domain.Common.Models;
+using BudgetControl.Domain.LedgerAggregate.ValueObjects;
 
 namespace BudgetControl.Domain.LedgerAggregate.Entities;
 
-public sealed class LedgerCategory : Entity<Guid>
+public sealed class LedgerCategory : Entity<LedgerCategoryId>
 {
     public string Name { get; private set; }
     public float Goal { get; private set; }
     public string Color { get; private set; }
-    public Guid LedgerId { get; private set; }
+    public LedgerId LedgerId { get; private set; }
     private readonly List<CategoryGroup> _groups = new();
 
     public List<CategoryGroup> Groups => _groups.ToList();
-    private LedgerCategory(Guid id,
+    private LedgerCategory(LedgerCategoryId ledgerCategoryId,
                            string name,
                            float goal,
                            string color,
-                           Guid ledgerId) : base(id)
+                           LedgerId ledgerId) : base(ledgerCategoryId)
     {
         Name = name;
         Goal = goal;
@@ -26,10 +27,10 @@ public sealed class LedgerCategory : Entity<Guid>
     public static LedgerCategory Create(string name,
                                         float goal,
                                         string color,
-                                        Guid ledgerId,
+                                        LedgerId ledgerId,
                                         List<CategoryGroup>? groups = null)
     {
-        var category = new LedgerCategory(Guid.NewGuid(),
+        var category = new LedgerCategory(LedgerCategoryId.CreateUnique(),
                                           name,
                                           goal,
                                           color,
@@ -50,4 +51,10 @@ public sealed class LedgerCategory : Entity<Guid>
         _groups.AddRange(groups);
     }
 
+    #pragma warning disable CS8618
+    private LedgerCategory()
+    {
+
+    }
+    #pragma warning restore CS8618
 }

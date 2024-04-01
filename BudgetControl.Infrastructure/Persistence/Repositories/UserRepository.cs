@@ -1,4 +1,5 @@
 using BudgetControl.Domain.UserAggregate;
+using BudgetControl.Domain.UserAggregate.ValueObjects;
 using BudgetControl.Interfaces.Persistence.Authentication;
 using Microsoft.EntityFrameworkCore;
 
@@ -37,8 +38,16 @@ public class UserRepository : IUserRepository<User>
         }
     }
 
-    public User? Get(string id)
+    public async Task<User?> GetById(Guid id)
     {
-        return _context.Users.SingleOrDefault(u => u.Id.ToString() == id);
+        var user = await _context.Users
+                            .FindAsync(UserId.Create(id));
+        return user;
+    }
+
+    public async Task<User?> GetUserByName(string name)
+    {
+        var user = await _context.Users.SingleOrDefaultAsync(u => u.Name == name);
+        return user;
     }
 }

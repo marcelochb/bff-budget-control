@@ -1,30 +1,40 @@
 using BudgetControl.Domain.Common.Models;
 using BudgetControl.Domain.LedgerAggregate.Entities;
+using BudgetControl.Domain.LedgerAggregate.Events;
+using BudgetControl.Domain.LedgerAggregate.ValueObjects;
+using BudgetControl.Domain.UserAggregate;
+using BudgetControl.Domain.UserAggregate.ValueObjects;
 
 namespace BudgetControl.Domain.LedgerAggregate;
 
-public sealed class Ledger : AggregateRoot<Guid>
+public sealed class Ledger : AggregateRoot<LedgerId>
 {
     public string Name { get; private set; }
     public string Type { get; private set; }
-    public LedgerUser? User { get; private set;}
+    public UserId UserId { get; private set;}
     private readonly List<LedgerCategory> _categories = new();
+    // private readonly List<UserId> _usersShare = new();
 
     public List<LedgerCategory> Categories => _categories.ToList();
-
-    private Ledger(Guid Id, string name, string type) : base(Id)
+    // public List<UserId> UsersShare => _usersShare.ToList();
+    private Ledger(LedgerId Id, string name, string type, UserId userId) : base(Id)
     {
         Name = name;
         Type = type;
+        UserId = userId;
     }
 
-    public static Ledger Create(string name, string type, LedgerUser? user = null, List<LedgerCategory>? categories = null)
+    public static Ledger Create(string name, string type, UserId userId, List<LedgerCategory>? categories = null, bool isForNewUser = false, User? user = null)
     {
-        var ledger = new Ledger(Guid.NewGuid(),
+        var ledger = new Ledger(LedgerId.CreateUnique(),
                                 name,
-                                type);
+                                type,
+                                userId);
+
         if (categories is not null) ledger.AddCategories(categories);
-        if (user is not null) ledger.AddUser(user);
+
+        if (isForNewUser && user is not null) ledger.AddDomainEvent(new LedgerDefaultForNewUser(ledger, user));
+
         return ledger;
     }
 
@@ -48,8 +58,9 @@ public sealed class Ledger : AggregateRoot<Guid>
         _categories.Remove(category);
     }
 
-    public void AddUser(LedgerUser user)
+    #pragma warning disable CS8618
+    private Ledger()
     {
-        User = user;
     }
+    #pragma warning restore CS8618
 }

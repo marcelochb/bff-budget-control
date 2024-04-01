@@ -2,8 +2,7 @@ using BudgetControl.Application.Categories.Contracts;
 using BudgetControl.Domain.Common.Errors;
 using BudgetControl.Domain.LedgerAggregate;
 using BudgetControl.Domain.LedgerAggregate.Entities;
-using BudgetControl.Interfaces.Persistence.Categories;
-using BudgetControl.Interfaces.Persistence.Ledgers;
+using BudgetControl.Interfaces.Persistence;
 using ErrorOr;
 using MediatR;
 

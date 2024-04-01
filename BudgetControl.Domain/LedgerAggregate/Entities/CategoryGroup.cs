@@ -1,23 +1,35 @@
 using BudgetControl.Domain.Common.Models;
+using BudgetControl.Domain.LedgerAggregate.ValueObjects;
 
 namespace BudgetControl.Domain.LedgerAggregate.Entities;
 
-public sealed class CategoryGroup : Entity<Guid>
+public sealed class CategoryGroup : Entity<CategoryGroupId>
 {
     public string Name { get; private set; }
     public float Goal { get; private set; }
 
-    public Guid LedgerCategoryId { get; private set; }
+    public LedgerCategoryId LedgerCategoryId { get; private set; }
+    public LedgerId LedgerId { get; private set; }
 
-    private CategoryGroup(Guid id, string name, float goal, Guid ledgerCategoryId) : base(id)
+    private CategoryGroup(
+        CategoryGroupId id,
+        string name,
+        float goal,
+        LedgerCategoryId ledgerCategoryId,
+        LedgerId ledgerId) : base(id)
     {
         Name = name;
         Goal = goal;
         LedgerCategoryId = ledgerCategoryId;
+        LedgerId = ledgerId;
     }
 
-    public static CategoryGroup Create(string name, float goal, Guid ledgerCategoryId)
+    public static CategoryGroup Create(
+        string name,
+        float goal,
+        LedgerCategoryId ledgerCategoryId,
+        LedgerId ledgerId)
     {
-        return new(Guid.NewGuid(), name, goal, ledgerCategoryId);
+        return new(CategoryGroupId.CreateUnique(), name, goal, ledgerCategoryId, ledgerId);
     }
 }

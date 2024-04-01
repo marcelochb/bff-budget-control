@@ -4,19 +4,18 @@ using BudgetControl.Infrastructure.Authentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using BudgetControl.Interfaces.Persistence.Authentication;
-using BudgetControl.Interfaces.Persistence.Ledgers;
+using BudgetControl.Interfaces.Persistence;
 using BudgetControl.Domain.UserAggregate;
 using BudgetControl.Domain.LedgerAggregate;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Options;
 using System.Text;
-using BudgetControl.Interfaces.Persistence.Categories;
 using BudgetControl.Domain.LedgerAggregate.Entities;
 using Microsoft.EntityFrameworkCore;
 using BudgetControl.Infrastructure.Persistence.Repositories;
-using MongoDB.Driver;
 using BudgetControl.Infrastructure.Persistence.Interceptors;
+using BudgetControl.Domain.ConfigAggregate;
 
 namespace BudgetControl.Infrastructure;
 
@@ -35,16 +34,18 @@ public static class DependencyInjection
     public static IServiceCollection AddPersistance(
     this IServiceCollection services)
     {
-        var mongodb = new MongoClient("mongodb://localhost:27017").GetDatabase("BudgetControl");
+        // var mongodb = new MongoClient("mongodb://localhost:27017").GetDatabase("BudgetControl");
         services.AddDbContext<BudgetControlDbContext>(options =>
         {
-            options.UseMongoDB(mongodb.Client,mongodb.DatabaseNamespace.DatabaseName);
+            // options.UseMongoDB(mongodb.Client,mongodb.DatabaseNamespace.DatabaseName);
+            options.UseSqlServer("Server=localhost;Database=BudgetControl;User Id=SA;Password=slMchb2@11;TrustServerCertificate=True;");
         });
 
         services.AddScoped<PublishDomainEventsInterceptors>();
         services.AddScoped<IUserRepository<User>, UserRepository>();
         services.AddScoped<ILedgerRepository<Ledger>, LedgerRepository>();
         services.AddScoped<ICategoryRepository<LedgerCategory>, CategoryRepository>();
+        services.AddScoped<IConfigRepository<Config>, ConfigRepository>();
         return services;            
     }
 

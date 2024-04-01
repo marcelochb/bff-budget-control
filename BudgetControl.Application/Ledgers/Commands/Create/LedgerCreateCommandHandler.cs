@@ -1,12 +1,13 @@
 using BudgetControl.Application.Ledgers.Contratcts;
 using BudgetControl.Domain.Common.Errors;
 using BudgetControl.Domain.LedgerAggregate;
-using BudgetControl.Domain.LedgerAggregate.Entities;
 using BudgetControl.Domain.UserAggregate;
 using BudgetControl.Interfaces.Persistence.Authentication;
-using BudgetControl.Interfaces.Persistence.Ledgers;
+using BudgetControl.Interfaces.Persistence;
 using ErrorOr;
 using MediatR;
+using BudgetControl.Domain.UserAggregate.ValueObjects;
+using MapsterMapper;
 
 namespace BudgetControl.Application.Ledgers.Commands.Create;
 
@@ -14,11 +15,13 @@ public class LedgerCreateCommandHandler : IRequestHandler<LedgerCreateCommand, E
 {
     private readonly ILedgerRepository<Ledger> _ledgerRepository;
     private readonly IUserRepository<User> _userRepository;
+    private readonly IMapper _mapper;
 
-    public LedgerCreateCommandHandler(ILedgerRepository<Ledger> ledgerRepository, IUserRepository<User> userRepository)
+    public LedgerCreateCommandHandler(ILedgerRepository<Ledger> ledgerRepository, IUserRepository<User> userRepository, IMapper mapper)
     {
         _ledgerRepository = ledgerRepository;
         _userRepository = userRepository;
+        _mapper = mapper;
     }
 
     public async Task<ErrorOr<LedgerResult>> Handle(LedgerCreateCommand command, CancellationToken cancellationToken)
@@ -28,16 +31,16 @@ public class LedgerCreateCommandHandler : IRequestHandler<LedgerCreateCommand, E
             return Errors.Ledger.DuplicateName;
         }
 
-        var user = _userRepository.Get(command.UserId);
+        var user = await _userRepository.GetById(Guid.Parse(command.UserId));
         if (user is null)
         {
             return Errors.User.NotFound;
-        }
-
+        } 
         var ledger = Ledger.Create(name: command.Name,
                                    type: command.Type,
-                                   user: LedgerUser.Create(user.Id, user.Name));
+                                   userId:user.Id );
         await _ledgerRepository.Add(ledger);
-        return new LedgerResult(ledger.Name, ledger.Type);
+        return _mapper.Map<LedgerResult>(ledger);
+
     }
 }

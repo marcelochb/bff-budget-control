@@ -4,7 +4,6 @@ using BudgetControl.Application.Ledgers.Queries.Get;
 using BudgetControl.Application.Ledgers.Queries.List;
 using BudgetControl.Contracts.Ledgers.Request;
 using BudgetControl.Contracts.Ledgers.Response;
-using BudgetControl.Domain.LedgerAggregate;
 using ErrorOr;
 using MapsterMapper;
 using MediatR;

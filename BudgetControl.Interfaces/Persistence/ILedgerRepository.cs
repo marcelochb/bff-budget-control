@@ -1,4 +1,4 @@
-namespace BudgetControl.Interfaces.Persistence.Ledgers;
+namespace BudgetControl.Interfaces.Persistence;
 
 public interface ILedgerRepository<T>
 {
@@ -7,5 +7,5 @@ public interface ILedgerRepository<T>
     Task Add(T ledger);
     Task Update(T ledger);
     Task Remove(Guid id);
-    List<T> GetLedgersByUserId(Guid userId);
+    Task<List<T>> GetLedgersByUserId(Guid userId);
 }

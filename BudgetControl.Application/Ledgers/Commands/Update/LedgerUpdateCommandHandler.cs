@@ -2,7 +2,8 @@ using BudgetControl.Application.Ledgers.Contratcts;
 using BudgetControl.Domain.Common.Errors;
 using BudgetControl.Domain.LedgerAggregate;
 using BudgetControl.Domain.LedgerAggregate.Entities;
-using BudgetControl.Interfaces.Persistence.Ledgers;
+using BudgetControl.Domain.UserAggregate.ValueObjects;
+using BudgetControl.Interfaces.Persistence;
 using ErrorOr;
 using MediatR;
 
@@ -24,7 +25,7 @@ public class LedgerUpdateCommandHandler : IRequestHandler<LedgerUpdateCommand, E
         {
             return Errors.Ledger.NotFound;
         }
-        var ledgerToUpdate = Ledger.Create(command.Name, command.Type);
+        var ledgerToUpdate = Ledger.Create(command.Name, command.Type,UserId.Create(command.UserId));
         ledger.Update(ledgerToUpdate);
         await _ledgerRepository.Update(ledger);
 

@@ -1,5 +1,7 @@
 using BudgetControl.Domain.Common.Models;
+using BudgetControl.Domain.ConfigAggregate;
 using BudgetControl.Domain.LedgerAggregate;
+using BudgetControl.Domain.LedgerAggregate.Entities;
 using BudgetControl.Domain.UserAggregate;
 using BudgetControl.Infrastructure.Persistence.Interceptors;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +18,9 @@ public class BudgetControlDbContext : DbContext
     }
     public DbSet<User> Users { get; init; }
     public DbSet<Ledger> Ledgers { get; init; }
+    public DbSet<LedgerCategory> Categories { get; init; }
+    public DbSet<CategoryGroup> Groups { get; init; }
+    public DbSet<Config> Configs { get; init; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

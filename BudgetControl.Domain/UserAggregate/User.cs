@@ -1,20 +1,21 @@
 using BudgetControl.Domain.Common.Models;
-using BudgetControl.Domain.UserAggregate.Entities;
-using BudgetControl.Domain.UserAggregate.Events;
+using BudgetControl.Domain.ConfigAggregate.ValueObjects;
+using BudgetControl.Domain.UserAggregate.ValueObjects;
 
 namespace BudgetControl.Domain.UserAggregate;
 
-public sealed class User : AggregateRoot<Guid>
+public sealed class User : AggregateRoot<UserId>
 {
     public string Name { get; private set;}
     public string Email { get;private set; }
     public string Password { get;private set; }
     public string Status { get;private set; }
 
-    public UserConfig? Config { get; private set; }
+    public ConfigId? ConfigId { get; private set; }
+
 
     private User(
-        Guid Id,
+        UserId Id,
         string name,
         string email,
         string password,
@@ -32,18 +33,18 @@ public sealed class User : AggregateRoot<Guid>
         string email,
         string password,
         string status,
-        UserConfig? config = null
+        ConfigId? configId = null
     )
     {
         var user = new User(
-            Guid.NewGuid(),
+            UserId.CreateUnique(),
             name,
             email,
             password,
             status
         );
-        if (config is not null) user.UpdateConfig(config);
-        user.AddDomainEvent(new UserCreated(user));
+        if (configId is not null) user.UpdateConfig(configId);
+        user.AddDomainEvent(new Events.UserCreated(user));
         return user;
     }
     public void Update(User? user)
@@ -57,8 +58,14 @@ public sealed class User : AggregateRoot<Guid>
         }
     }
 
-    public  void UpdateConfig(UserConfig config)
+    public  void UpdateConfig(ConfigId configId)
     {
-        Config = config;
+        ConfigId = configId;
     }
+
+    #pragma warning disable CS8618
+    private User()
+    {
+    }
+    #pragma warning restore CS8618
 }

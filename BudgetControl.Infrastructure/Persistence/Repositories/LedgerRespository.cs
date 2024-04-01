@@ -1,13 +1,9 @@
 using BudgetControl.Domain.LedgerAggregate;
-using BudgetControl.Interfaces.Persistence.Ledgers;
+using BudgetControl.Domain.LedgerAggregate.ValueObjects;
+using BudgetControl.Domain.UserAggregate;
+using BudgetControl.Interfaces.Persistence;
 using Microsoft.EntityFrameworkCore;
-using MongoDB.Driver;
-using MongoDB.Driver.Linq;
-using MongoDB.Bson;
-using BudgetControl.Domain;
-using System.Linq;
-using MongoDB.Bson.Serialization.Serializers;
-using MongoDB.Bson.Serialization;
+
 
 namespace BudgetControl.Infrastructure.Persistence.Repositories;
 
@@ -32,10 +28,13 @@ public class LedgerRepository : ILedgerRepository<Ledger>
     public async Task<Ledger?> GetById(Guid id)
     {
 
-        var result = _context.Ledgers.Find(id);
+        var result = await _context.Ledgers
+                                .Include(element => element.Categories)
+                                .ThenInclude(element => element.Groups)
+                                .ToListAsync();
 
 
-        return result;
+        return result.Where(element => element.Id.Value == id).FirstOrDefault();
     }
 
     public async Task<bool> GetByName(string name)
@@ -44,9 +43,14 @@ public class LedgerRepository : ILedgerRepository<Ledger>
         return ledger;
     }
 
-    public List<Ledger> GetLedgersByUserId(Guid userId)
+    public async Task<List<Ledger>> GetLedgersByUserId(Guid userId)
     {
-        return _context.Ledgers.Where(element => element.User.Id == userId).ToList();
+        var result = await _context.Ledgers
+                        .Include(element => element.Categories)
+                        .ThenInclude(element => element.Groups)
+                        .ToListAsync();
+
+        return result.Where(element => element.UserId.Value == userId).ToList();
     }
 
     public async Task Remove(Guid id)

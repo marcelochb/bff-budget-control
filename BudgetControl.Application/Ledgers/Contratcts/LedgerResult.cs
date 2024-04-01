@@ -1,4 +1,9 @@
 namespace BudgetControl.Application.Ledgers.Contratcts;
 
 
-public record LedgerResult(string Name, string Type);
+public record LedgerResult(
+    Guid Id,
+    Guid UserId,
+    string Name,
+    string Type,
+    List<LedgerCategoryResult> Categories);
