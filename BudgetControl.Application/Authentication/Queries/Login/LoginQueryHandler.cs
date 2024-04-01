@@ -6,6 +6,7 @@ using BudgetControl.Domain.UserAggregate;
 using BudgetControl.Interfaces.Persistence;
 using BudgetControl.Interfaces.Persistence.Authentication;
 using ErrorOr;
+using MapsterMapper;
 using MediatR;
 
 namespace BudgetControl.Application.Authentication.Queries.Login;
@@ -35,12 +36,12 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, ErrorOr<Authenticat
             return new[] { Errors.Authentication.InvalidCredential };
         }
 
-        var config = await _configRepository.GetById(user?.ConfigId?.Value ?? Guid.Empty);
+        var config = await _configRepository.GetById(user.ConfigId?.Value ?? Guid.Empty);
 
         var userResult = new UserResult(
-            user?.Name ?? "",
-            user?.Email ?? "",
-            user?.Status ?? "",
+            user.Name,
+            user.Email,
+            user.Status,
             new ConfigResult(config?.LedgerId.Value.ToString() ?? ""));
 
         var token = _jwtTokenGenerator.GeneratorToken(user);

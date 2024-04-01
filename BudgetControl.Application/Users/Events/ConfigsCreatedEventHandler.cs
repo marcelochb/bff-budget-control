@@ -16,6 +16,7 @@ public class ConfigCreatedEventHandler : INotificationHandler<ConfigCreated>
 
     public async Task Handle(ConfigCreated notification, CancellationToken cancellationToken)
     {
+            await Task.CompletedTask;
             notification.User.UpdateConfig(notification.Config.Id);
             // await _userRepository.Update(notification.User);
     }
