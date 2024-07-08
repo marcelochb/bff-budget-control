@@ -1,5 +1,6 @@
 using BudgetControl.Domain.Common.Models;
 using BudgetControl.Domain.ConfigAggregate.ValueObjects;
+using BudgetControl.Domain.LedgerAggregate;
 using BudgetControl.Domain.UserAggregate.ValueObjects;
 
 namespace BudgetControl.Domain.UserAggregate;
@@ -10,6 +11,9 @@ public sealed class User : AggregateRoot<UserId>
     public string Email { get;private set; }
     public string Password { get;private set; }
     public string Status { get;private set; }
+
+    private readonly List<Ledger> _sharedLedgers = new();
+    public List<Ledger> SharedLedgers => _sharedLedgers.ToList();
 
     public ConfigId? ConfigId { get; private set; }
 
@@ -44,7 +48,7 @@ public sealed class User : AggregateRoot<UserId>
             status
         );
         if (configId is not null) user.UpdateConfig(configId);
-        user.AddDomainEvent(new Events.UserCreated(user));
+        user.AddDomainEvent(new Events.CreateLedgerDefault(user));
         return user;
     }
     public void Update(User? user)

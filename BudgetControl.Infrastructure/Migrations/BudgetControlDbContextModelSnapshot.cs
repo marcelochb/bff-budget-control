@@ -168,6 +168,21 @@ namespace BudgetControl.Infrastructure.Migrations
                     b.ToTable("Users", (string)null);
                 });
 
+            modelBuilder.Entity("LedgerUser", b =>
+                {
+                    b.Property<Guid>("SharedLedgersId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UsersShareId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("SharedLedgersId", "UsersShareId");
+
+                    b.HasIndex("UsersShareId");
+
+                    b.ToTable("UsersSharingLedgers", (string)null);
+                });
+
             modelBuilder.Entity("BudgetControl.Domain.LedgerAggregate.Entities.CategoryGroup", b =>
                 {
                     b.HasOne("BudgetControl.Domain.LedgerAggregate.Entities.LedgerCategory", null)
@@ -196,6 +211,21 @@ namespace BudgetControl.Infrastructure.Migrations
                     b.HasOne("BudgetControl.Domain.ConfigAggregate.Config", null)
                         .WithOne()
                         .HasForeignKey("BudgetControl.Domain.UserAggregate.User", "ConfigId");
+                });
+
+            modelBuilder.Entity("LedgerUser", b =>
+                {
+                    b.HasOne("BudgetControl.Domain.LedgerAggregate.Ledger", null)
+                        .WithMany()
+                        .HasForeignKey("SharedLedgersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BudgetControl.Domain.UserAggregate.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersShareId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BudgetControl.Domain.LedgerAggregate.Entities.LedgerCategory", b =>

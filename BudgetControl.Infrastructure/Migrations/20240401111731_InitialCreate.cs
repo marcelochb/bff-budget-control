@@ -85,6 +85,30 @@ namespace BudgetControl.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UsersSharingLedgers",
+                columns: table => new
+                {
+                    SharedLedgersId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UsersShareId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UsersSharingLedgers", x => new { x.SharedLedgersId, x.UsersShareId });
+                    table.ForeignKey(
+                        name: "FK_UsersSharingLedgers_Ledgers_SharedLedgersId",
+                        column: x => x.SharedLedgersId,
+                        principalTable: "Ledgers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
+                    table.ForeignKey(
+                        name: "FK_UsersSharingLedgers_Users_UsersShareId",
+                        column: x => x.UsersShareId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.NoAction);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "CategoryGroups",
                 columns: table => new
                 {
@@ -152,6 +176,11 @@ namespace BudgetControl.Infrastructure.Migrations
                 table: "Users",
                 column: "Name",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UsersSharingLedgers_UsersShareId",
+                table: "UsersSharingLedgers",
+                column: "UsersShareId");
         }
 
         /// <inheritdoc />
@@ -159,6 +188,9 @@ namespace BudgetControl.Infrastructure.Migrations
         {
             migrationBuilder.DropTable(
                 name: "CategoryGroups");
+
+            migrationBuilder.DropTable(
+                name: "UsersSharingLedgers");
 
             migrationBuilder.DropTable(
                 name: "LedgerCategories");

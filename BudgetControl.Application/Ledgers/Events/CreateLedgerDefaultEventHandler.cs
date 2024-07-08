@@ -8,16 +8,16 @@ using MediatR;
 
 namespace BudgetControl.Application.Ledgers.Events;
 
-public class UserCreatedEventHandler : INotificationHandler<UserCreated>
+public class CreateLedgerDefaultEventHandler : INotificationHandler<CreateLedgerDefault>
 {
     private readonly ILedgerRepository<Ledger> _ledgerRepository;
 
-    public UserCreatedEventHandler(ILedgerRepository<Ledger> ledgerRepository, IUserRepository<User> userRepository)
+    public CreateLedgerDefaultEventHandler(ILedgerRepository<Ledger> ledgerRepository, IUserRepository<User> userRepository)
     {
         _ledgerRepository = ledgerRepository;
     }
 
-    public async Task Handle(UserCreated notification, CancellationToken cancellationToken)
+    public async Task Handle(CreateLedgerDefault notification, CancellationToken cancellationToken)
     {
        var ledger = Ledger.Create(name: "Default",
                                    type: "Expense",

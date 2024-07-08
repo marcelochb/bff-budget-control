@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BudgetControl.Infrastructure.Migrations
 {
     [DbContext(typeof(BudgetControlDbContext))]
-    [Migration("20240324044244_InitialCreate")]
+    [Migration("20240401111731_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -171,6 +171,21 @@ namespace BudgetControl.Infrastructure.Migrations
                     b.ToTable("Users", (string)null);
                 });
 
+            modelBuilder.Entity("LedgerUser", b =>
+                {
+                    b.Property<Guid>("SharedLedgersId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UsersShareId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("SharedLedgersId", "UsersShareId");
+
+                    b.HasIndex("UsersShareId");
+
+                    b.ToTable("UsersSharingLedgers", (string)null);
+                });
+
             modelBuilder.Entity("BudgetControl.Domain.LedgerAggregate.Entities.CategoryGroup", b =>
                 {
                     b.HasOne("BudgetControl.Domain.LedgerAggregate.Entities.LedgerCategory", null)
@@ -199,6 +214,21 @@ namespace BudgetControl.Infrastructure.Migrations
                     b.HasOne("BudgetControl.Domain.ConfigAggregate.Config", null)
                         .WithOne()
                         .HasForeignKey("BudgetControl.Domain.UserAggregate.User", "ConfigId");
+                });
+
+            modelBuilder.Entity("LedgerUser", b =>
+                {
+                    b.HasOne("BudgetControl.Domain.LedgerAggregate.Ledger", null)
+                        .WithMany()
+                        .HasForeignKey("SharedLedgersId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("BudgetControl.Domain.UserAggregate.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersShareId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BudgetControl.Domain.LedgerAggregate.Entities.LedgerCategory", b =>

@@ -13,10 +13,10 @@ public sealed class Ledger : AggregateRoot<LedgerId>
     public string Type { get; private set; }
     public UserId UserId { get; private set;}
     private readonly List<LedgerCategory> _categories = new();
-    // private readonly List<UserId> _usersShare = new();
+    private readonly List<User> _usersShare = new();
 
     public List<LedgerCategory> Categories => _categories.ToList();
-    // public List<UserId> UsersShare => _usersShare.ToList();
+    public List<User> UsersShare => _usersShare.ToList();
     private Ledger(LedgerId Id, string name, string type, UserId userId) : base(Id)
     {
         Name = name;
@@ -33,7 +33,7 @@ public sealed class Ledger : AggregateRoot<LedgerId>
 
         if (categories is not null) ledger.AddCategories(categories);
 
-        if (isForNewUser && user is not null) ledger.AddDomainEvent(new LedgerDefaultForNewUser(ledger, user));
+        if (isForNewUser && user is not null) ledger.AddDomainEvent(new CreateConfig(ledger, user));
 
         return ledger;
     }
