@@ -5,16 +5,16 @@ using MediatR;
 
 namespace BudgetControl.Application.Users.Events;
 
-public class ConfigCreatedEventHandler : INotificationHandler<ConfigCreated>
+public class UpdateUserEventHandler : INotificationHandler<UpdateUser>
 {
     private readonly IUserRepository<User> _userRepository;
 
-    public ConfigCreatedEventHandler(IUserRepository<User> userRepository)
+    public UpdateUserEventHandler(IUserRepository<User> userRepository)
     {
         _userRepository = userRepository;
     }
 
-    public async Task Handle(ConfigCreated notification, CancellationToken cancellationToken)
+    public async Task Handle(UpdateUser notification, CancellationToken cancellationToken)
     {
             await Task.CompletedTask;
             notification.User.UpdateConfig(notification.Config.Id);

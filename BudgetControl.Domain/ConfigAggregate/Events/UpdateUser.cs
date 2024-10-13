@@ -3,4 +3,4 @@ using BudgetControl.Domain.UserAggregate;
 using BudgetControl.Domain.UserAggregate.ValueObjects;
 
 namespace BudgetControl.Domain.ConfigAggregate.Events;
-public record ConfigCreated(Config Config, User User) : IDomainEvent;
+public record UpdateUser(Config Config, User User) : IDomainEvent;

@@ -18,7 +18,7 @@ public sealed class Config : AggregateRoot<ConfigId>
     public static Config Create(LedgerId ledgerId, User user)
     {
         var config = new Config(ConfigId.CreateUnique(), ledgerId);
-        config.AddDomainEvent(new Events.ConfigCreated(config, user));
+        config.AddDomainEvent(new Events.UpdateUser(config, user));
         return config;
     }
 
