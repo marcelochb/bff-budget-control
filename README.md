@@ -1,4 +1,6 @@
-# BFF Budget Control
+# API Budget Control
+
+Web API para um aplicativo de controlle financeiro.
 
 ## Tecnologias
 
