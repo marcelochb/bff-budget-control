@@ -25,7 +25,7 @@ Web API para um aplicativo de controlle financeiro.
 - Infrastructure
 - Interfaces
 
-### Design Pattern
+### Backend Service Archtecture
 
 ![Design Pattern](.attachments/design.pattern.png)
 
@@ -33,3 +33,6 @@ Web API para um aplicativo de controlle financeiro.
 
 ![New User](.attachments/dfd.new.user.png)
 
+# License
+
+This project is licensed under the terms of the [MIT](https://github.com/amantinband/buber-breakfast/blob/main/LICENSE) license.
