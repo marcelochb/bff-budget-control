@@ -1,6 +1,6 @@
 # BFF Budget Control
 
-### Tecnologias usadas
+## Tecnologias
 
 - Mapster
 - MediatR
@@ -10,26 +10,24 @@
 - EnityFrameworkCore
 - TokenJwt
 
-### Estrutura do projeto
+## Estrutura do projeto
 
-- src =>
-  - core => Configurações globais.
-    - config =>
-    - service => clientes api
-    - constants =>
-    - interfaces => interfaces globas
-    - componentes =>
-  - features =>
-    - todo
-        - dtos => modelagem com regras de negócio
-        - infra
-            - binds
-            - presenter
-                - create
-                    - controllers
-                    - pages
-                    - componentes
-                - list
-        - mocks
-        - usecases
-- test => testes unitários
+- Api
+  - Common
+    - Http
+    - Mapping
+  - Controllers
+- Application => CQRS
+- Contracts
+- Domaiin
+- Infrastructure
+- Interfaces
+
+### Design Pattern
+
+![Design Pattern](.attachments/design.pattern.png)
+
+### DFD New User
+
+![New User](.attachments/dfd.new.user.png)
+
